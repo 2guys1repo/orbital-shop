@@ -7,46 +7,49 @@ import Link from "next/link"
 export default function HomePage() {
   return (
     <>
-      <HomeHeaderSection/>
+      <HomeHeaderSection />
       <main className="py-12 md:py-20">
         <div className="container px-4 md:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Featured Products</h2>
-            <div className="relative">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
-              <Input
-                className="pl-10 pr-4 py-2 rounded-md bg-gray-100"
-                placeholder="Search products..."
-                type="search"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <ProductCard/>
-          </div>
+          <ProductSectionHeader />
+          <ProductGrid />
         </div>
       </main>
     </>
   )
 }
 
-function ProductGrid() {
+import TEMP_PRODUCT_DATA from "@/lib/placeholder-data"
+// Fetches data of each product
+async function productFetcher() {
+  // TODO
+  return TEMP_PRODUCT_DATA;
+}
+
+// Displays the subheader for the product section
+function ProductSectionHeader() {
+  return (
+    <div className="flex items-center justify-between mb-8">
+      <h2 className="text-2xl md:text-3xl font-bold">Featured Products</h2>
+      <div className="relative">
+        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
+        <Input
+          className="pl-10 pr-4 py-2 rounded-md bg-gray-100"
+          placeholder="Search products..."
+          type="search"
+        />
+      </div>
+    </div>
+  )
+}
+
+// Displays all products in a grid
+async function ProductGrid() {
+  const products = await productFetcher();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <img
-          alt="Product 1"
-          className="w-full aspect-square object-cover"
-          height={400}
-          src="/cutebear.png"
-          width={400}
-        />
-        <div className="p-4 space-y-2">
-          <h3 className="text-lg font-medium">Wireless Headphones</h3>
-          <p className="text-gray-500 dark:text-gray-400">$99.99</p>
-          <Button size="sm">Add to Cart</Button>
-        </div>
-      </div>
+      {products.map(product => (
+        <ProductCard key={product.id} {...product} />
+      ))}
     </div>
   )
 }
