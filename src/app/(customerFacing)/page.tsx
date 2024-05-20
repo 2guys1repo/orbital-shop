@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import Link from "next/link"
+import prisma from "@/lib/db"
 
 export default function HomePage() {
   return (
@@ -18,11 +19,9 @@ export default function HomePage() {
   )
 }
 
-import TEMP_PRODUCT_DATA from "@/lib/placeholder-data"
-// Fetches data of each product
+// Fetches all the products from db
 async function productFetcher() {
-  // TODO
-  return TEMP_PRODUCT_DATA;
+  return await prisma.product.findMany()
 }
 
 // Displays the subheader for the product section

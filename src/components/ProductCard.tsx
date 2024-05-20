@@ -5,13 +5,13 @@ import Image from "next/image";
 
 type ProductCardProps = {
   title: string,
-  desc: string,
+  description: string,
   price: number,
   imagePath: string,
 }
 
 // Renders a card for individual products
-export default function ProductCard({ title, desc, price, imagePath }: ProductCardProps) {
+export default function ProductCard({ title, description, price, imagePath }: ProductCardProps) {
   return (
     <Card className="w-full max-w-sm">
       <Image
@@ -23,7 +23,7 @@ export default function ProductCard({ title, desc, price, imagePath }: ProductCa
       />
       <CardHeader >
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{desc}</CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent >
         <p className="text-2xl">{price}</p>

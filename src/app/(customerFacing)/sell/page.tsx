@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { addProduct } from "@/app/_actions/product"
 
-
 export default function SellPage() {
   return (
     <form action={addProduct}>
