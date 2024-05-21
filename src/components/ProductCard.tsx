@@ -8,10 +8,11 @@ type ProductCardProps = {
   description: string,
   price: number,
   imagePath: string,
+  id: number,
 }
 
 // Renders a card for individual products
-export default function ProductCard({ title, description, price, imagePath }: ProductCardProps) {
+export default function ProductCard({ title, description, price, imagePath, id:post_id }: ProductCardProps) {
   return (
     <Card className="w-full max-w-sm">
       <Image
@@ -30,7 +31,7 @@ export default function ProductCard({ title, description, price, imagePath }: Pr
       </CardContent>
       <CardFooter>
         <Button asChild size="lg" className="w-full">
-          <Link href="#">Buy now</Link>
+          <Link href={`/products/${post_id}`}>Buy now</Link>
         </Button>
       </CardFooter>
     </Card>
