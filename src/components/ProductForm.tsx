@@ -5,18 +5,20 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { addProduct, updateProduct } from "@/app/_actions/product"
+import { addProduct, deleteProduct, updateProduct } from "@/app/_actions/product"
 import { ProductType } from "@/lib/types"
 import Image from "next/image"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 type ProductFormProps = {
   product?: ProductType,
 }
 
 export default function ProductForm({ product }: ProductFormProps) {
+  // sets formAction to addProduct for creating new post or updateProduct for editing post 
   const formAction = product == undefined ? addProduct : updateProduct.bind(null, product.id)
   return (
-    <form action={formAction}>
+    <form action={formAction} >
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>List a Product</CardTitle>
@@ -73,13 +75,37 @@ export default function ProductForm({ product }: ProductFormProps) {
             </Label>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button type="submit">
-            List Product
+        <CardFooter className="flex justify-end gap-4" >
+          {product && <DeleteBtn product_id={product.id} />}
+          <Button >
+            {product == undefined ? "List Product" : "Save" }
           </Button>
         </CardFooter>
       </Card>
     </form>
+  )
+}
+
+function DeleteBtn({ product_id }: { product_id: number }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>Delete</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your listing
+            and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button asChild variant="destructive" onClick={() => deleteProduct(product_id)}>
+            <AlertDialogAction>Yes, delete listing</AlertDialogAction>
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 

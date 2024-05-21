@@ -4,7 +4,7 @@
 
 import { z } from "zod";
 import fs from "fs/promises";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
@@ -49,7 +49,7 @@ const updateSchema = postSchema.extend({
 })
 
 // Updates existing product in the database
-export async function updateProduct(id:number, formData: FormData) {
+export async function updateProduct(id: number, formData: FormData) {
   const result = updateSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
@@ -57,7 +57,7 @@ export async function updateProduct(id:number, formData: FormData) {
 
   const data = result.data;
   const product = await prisma.product.findFirst({ where: { id }})
-  if (!product) return;
+  if (!product) return notFound();
 
   let imagePath = product.imagePath;
   if (data.image != undefined && data.image.size > 0) {
@@ -81,7 +81,17 @@ export async function updateProduct(id:number, formData: FormData) {
   redirect("/")
 }
 
+// Deletes existing product from db
+export async function deleteProduct(id: number) {
+  const product = await prisma.product.delete({
+    where: { id }
+  })
+  if (!product) return notFound();
 
+  await fs.unlink(`public${product.imagePath}`)
+  revalidatePath("/")
+  redirect("/")
+}
 
 // Fetches all the products from db
 export async function getAllProducts() {
