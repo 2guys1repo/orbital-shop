@@ -2,8 +2,7 @@ import ProductCard from "@/components/ProductCard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
-import Link from "next/link"
-import prisma from "@/lib/db"
+import { getAllProducts } from "../_actions/product"
 
 export default function HomePage() {
   return (
@@ -17,11 +16,6 @@ export default function HomePage() {
       </main>
     </>
   )
-}
-
-// Fetches all the products from db
-async function productFetcher() {
-  return await prisma.product.findMany()
 }
 
 // Displays the subheader for the product section
@@ -43,7 +37,7 @@ function ProductSectionHeader() {
 
 // Displays all products in a grid
 async function ProductGrid() {
-  const products = await productFetcher();
+  const products = await getAllProducts();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {products.map(product => (

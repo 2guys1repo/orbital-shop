@@ -1,41 +1,11 @@
-import prisma from "@/lib/db"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import Image from "next/image"
 import Link from "next/link"
-
-// fetches a single product of the product id
-async function getProductById(product_id: number) {
-  return await prisma.product.findFirst({
-    where: {
-      id: product_id
-    }
-  })
-}
-
-async function getUserById(user_id: number) {
-  return await prisma.user.findFirst({
-    where: {
-      id: user_id
-    }
-  })
-}
-
-type ProductType = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  imagePath: string;
-  sellerId: number;
-}
-
-type UserType = {
-      id: number;
-    name: string;
-    email: string;
-}
+import { getProductById } from "@/app/_actions/product"
+import { getUserById } from "@/app/_actions/user"
+import { ProductType, UserType } from "@/lib/types"
 
 export default async function Product({ params }: { params: { id: string } }) {
   const product = await getProductById(parseInt(params.id))
@@ -50,7 +20,6 @@ export default async function Product({ params }: { params: { id: string } }) {
     </>
   )
 }
-
 
 function ProductPageHeader({ product }: { product: ProductType }) {
   return (
