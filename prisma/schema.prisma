@@ -16,6 +16,7 @@ model User {
   name String @unique
   email String @unique
   products Product[]
+  kindeId String @unique
 }
 
 // Most basic product model
@@ -25,6 +26,6 @@ model Product {
   description String
   price Float
   imagePath String
-  seller User @relation(fields: [sellerId], references: [id])
-  sellerId Int
+  seller User @relation(fields: [sellerKindeId], references: [kindeId])
+  sellerKindeId String
 }

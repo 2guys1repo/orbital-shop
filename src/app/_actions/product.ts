@@ -37,7 +37,7 @@ export async function addProduct(formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerId: 1, // TODO currently all tagged id 1 
+      sellerKindeId: "1", // TODO currently all tagged id 1 
     }
   })
   revalidatePath("/")
@@ -74,7 +74,7 @@ export async function updateProduct(id: number, formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerId: 1, // TODO currently all tagged id 1 
+      sellerKindeId: "1", // TODO currently all tagged id 1 
     }
   })
   revalidatePath("/")
