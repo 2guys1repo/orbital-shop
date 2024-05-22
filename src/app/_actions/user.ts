@@ -1,10 +1,10 @@
 "use server"
 
 // File contains actions to interact with User model on the database
-
 import prisma from "@/lib/db";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types"
 
-// Gets a single user by kinde id
+// Gets a single db user by kinde id
 export async function getUserByKindeId(kinde_id: string) {
   return await prisma.user.findFirst({
     where: {
@@ -13,16 +13,16 @@ export async function getUserByKindeId(kinde_id: string) {
   })
 }
 
-// returns an existing user or create a return new user 
-export async function getOrCreateUser(kinde_id: string, name: string|null, email: string|null) {
-  let user = await getUserByKindeId(kinde_id);
+// creates a user in the db if not already present
+// returns the db user
+export async function createUserIfAbsent(kindeUser: KindeUser) {
+  let user = await getUserByKindeId(kindeUser.id);
   if (!user) {
-    if (!name || !email) return; // Invalid fields
     user = await prisma.user.create({
       data: {
-        name: name,
-        email: email,
-        kindeId: kinde_id,
+        name: kindeUser.given_name!, // present unless signup process changes
+        email: kindeUser.email!,
+        kindeId: kindeUser.id,
       }
     })
   } 

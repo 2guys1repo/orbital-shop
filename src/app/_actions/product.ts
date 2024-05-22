@@ -8,7 +8,7 @@ import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { getOrCreateUser } from "./user";
+import { createUserIfAbsent } from "./user";
 
 const imageSchema = z.instanceof(File, {
   message: "Required",
@@ -26,9 +26,9 @@ export async function addProduct(formData: FormData) {
   const { getUser, isAuthenticated }= getKindeServerSession();
   if (!await isAuthenticated()) redirect("/api/auth/login");
   
-  const kinde_user = await getUser() // a kinde user
-  if (!kinde_user) return;
-  await getOrCreateUser(kinde_user.id, kinde_user.given_name, kinde_user.email); // creates a user in the database if not present
+  const kindeUser = await getUser() // a kinde user
+  if (!kindeUser) return;
+  await createUserIfAbsent(kindeUser)
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
@@ -45,7 +45,7 @@ export async function addProduct(formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerKindeId: kinde_user.id,
+      sellerKindeId: kindeUser.id,
     }
   })
   revalidatePath("/")
