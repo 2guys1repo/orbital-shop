@@ -7,6 +7,8 @@ import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getOrCreateUser } from "./user";
 
 const imageSchema = z.instanceof(File, {
   message: "Required",
@@ -21,6 +23,12 @@ const postSchema = z.object({
 
 // Creates a new product to the database
 export async function addProduct(formData: FormData) {
+  const { getUser, isAuthenticated }= getKindeServerSession();
+  if (!await isAuthenticated()) redirect("/api/auth/login");
+  
+  const kinde_user = await getUser() // a kinde user
+  if (!kinde_user) return;
+  await getOrCreateUser(kinde_user.id, kinde_user.given_name, kinde_user.email); // creates a user in the database if not present
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
@@ -37,7 +45,7 @@ export async function addProduct(formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerKindeId: "1", // TODO currently all tagged id 1 
+      sellerKindeId: kinde_user.id,
     }
   })
   revalidatePath("/")
@@ -50,6 +58,11 @@ const updateSchema = postSchema.extend({
 
 // Updates existing product in the database
 export async function updateProduct(id: number, formData: FormData) {
+  const { getUser, isAuthenticated }= getKindeServerSession();
+  if (!await isAuthenticated()) redirect("/api/auth/login");
+  const kinde_user = await getUser();
+  if (!kinde_user) return; // Can throw in future
+  
   const result = updateSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
@@ -58,6 +71,7 @@ export async function updateProduct(id: number, formData: FormData) {
   const data = result.data;
   const product = await prisma.product.findFirst({ where: { id }})
   if (!product) return notFound();
+  if (product.sellerKindeId != kinde_user.id) return; // Can throw unauthorise
 
   let imagePath = product.imagePath;
   if (data.image != undefined && data.image.size > 0) {
@@ -74,7 +88,6 @@ export async function updateProduct(id: number, formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerKindeId: "1", // TODO currently all tagged id 1 
     }
   })
   revalidatePath("/")

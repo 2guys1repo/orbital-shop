@@ -4,7 +4,7 @@ export type ProductType = {
   description: string;
   price: number;
   imagePath: string;
-  sellerId: number;
+  sellerKindeId: string;
 }
 
 export type UserType = {

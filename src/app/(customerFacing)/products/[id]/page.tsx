@@ -4,13 +4,13 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import Image from "next/image"
 import Link from "next/link"
 import { getProductById } from "@/app/_actions/product"
-import { getUserById } from "@/app/_actions/user"
+import { getUserByKindeId } from "@/app/_actions/user"
 import { ProductType, UserType } from "@/lib/types"
 
 export default async function Product({ params }: { params: { id: string } }) {
   const product = await getProductById(parseInt(params.id))
   if (!product) return;
-  const seller = await getUserById(product.sellerId)
+  const seller = await getUserByKindeId(product.sellerKindeId)
   if(!seller) return;
   return (
     <>
