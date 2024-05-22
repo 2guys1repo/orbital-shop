@@ -27,7 +27,7 @@ export default function ProductCard({ title, description, price, imagePath, id:p
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent >
-        <p className="text-2xl">{price}</p>
+        <p className="text-2xl">${price}</p>
       </CardContent>
       <CardFooter>
         <Button asChild size="lg" className="w-full">

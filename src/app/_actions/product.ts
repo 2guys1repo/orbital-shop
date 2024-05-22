@@ -119,3 +119,12 @@ export async function getProductById(product_id: number) {
     }
   })
 }
+
+// Fetches all the products from db
+export async function getProductsOfUser(kindeId: string) {
+  return await prisma.product.findMany({
+    where: {
+      sellerKindeId: kindeId
+    }
+  })
+}

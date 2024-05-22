@@ -5,10 +5,19 @@ import prisma from "@/lib/db";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types"
 
 // Gets a single db user by kinde id
-export async function getUserByKindeId(kinde_id: string) {
-  return await prisma.user.findFirst({
+export async function getUserByKindeId(kindeId: string) {
+  return await prisma.user.findUnique({
     where: {
-      kindeId: kinde_id
+      kindeId: kindeId
+    }
+  })
+}
+
+// gets a single db user by its db id
+export async function getUserByDbId(dbId: number) {
+  return await prisma.user.findUnique({
+    where: {
+      id: dbId
     }
   })
 }
