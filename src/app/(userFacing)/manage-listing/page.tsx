@@ -38,7 +38,7 @@ export default async function ListingsPage() {
         <TableBody>
           {
             products.map(product => (
-              <TableRow>
+              <TableRow key={product.id}>
                 <TableCell>{product.id}</TableCell>
                 <TableCell>{product.title}</TableCell>
                 <TableCell>${product.price}</TableCell>
