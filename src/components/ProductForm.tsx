@@ -92,6 +92,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   )
 }
 
+// SVG assets
 function UploadIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg

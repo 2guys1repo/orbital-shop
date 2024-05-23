@@ -10,10 +10,12 @@ import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUserIfAbsent } from "./user";
 
+// Schema describing an image file
 const imageSchema = z.instanceof(File, {
   message: "Required",
 }).refine(file => file.size === 0 || file.type.startsWith("image/"))
 
+// Schema describing a post form
 const postSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -21,7 +23,7 @@ const postSchema = z.object({
   image: imageSchema.refine(file => file.size > 0, "Required"),
 })
 
-// Creates a new product to the database
+// Creates a new product in the database
 export async function addProduct(formData: FormData) {
   const { getUser, isAuthenticated }= getKindeServerSession();
   if (!await isAuthenticated()) redirect("/api/auth/login");
@@ -52,6 +54,7 @@ export async function addProduct(formData: FormData) {
   redirect("/")
 }
 
+// Schema for an edit post form
 const updateSchema = postSchema.extend({
   image: imageSchema.optional(),
 })

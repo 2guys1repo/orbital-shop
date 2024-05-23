@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { getAllProducts } from "../_actions/product"
 
+// Main home page for users
 export default function HomePage() {
   return (
     <>

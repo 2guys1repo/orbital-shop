@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { notFound } from "next/navigation"
 
+// Page to show all listings of a user
 export default async function UserProfile({ params }: { params: { id: string } }) {
   // TODO check css
   const dbUser = await getUserByDbId(parseInt(params.id))

@@ -22,7 +22,7 @@ export async function getUserByDbId(dbId: number) {
   })
 }
 
-// creates a user in the db if not already present
+// creates a user in the db if not already present and,
 // returns the db user
 export async function createUserIfAbsent(kindeUser: KindeUser) {
   let user = await getUserByKindeId(kindeUser.id);

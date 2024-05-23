@@ -5,14 +5,7 @@ import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextj
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types"
 import { createUserIfAbsent } from "@/app/_actions/user";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 // TODO can fix css 
 export default async function NavBar() {
@@ -157,7 +150,6 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
-
 
 function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

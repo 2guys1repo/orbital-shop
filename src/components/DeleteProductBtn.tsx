@@ -4,7 +4,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "./ui/button"
 import { deleteProduct } from "@/app/_actions/product"
 
-// A button to delete product listing
+// A button to delete product listing in the db
 export default function DeleteProductBtn({ product_id, children }: { product_id: number, children?: React.ReactNode }) {
   return (
     <AlertDialog>

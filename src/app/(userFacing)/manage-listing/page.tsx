@@ -51,8 +51,6 @@ export default async function ListingsPage() {
           }
         </TableBody>
       </Table>
-
-
     </div>
   )
 }
@@ -79,7 +77,6 @@ function EditDialog({ product }: { product: ProductType }) {
     </Dialog>
   )
 }
-
 
 // SVG ASSETS
 function CogIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -114,7 +111,6 @@ function CogIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-
 function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -134,7 +130,6 @@ function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
-
 
 function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { CardTitle, CardDescription, CardHeader, CardContent, Card, CardFooter } from "@/components/ui/card"
 import Image from "next/image";
 
+// Fields of a product
 type ProductCardProps = {
   title: string,
   description: string,
