@@ -91,7 +91,7 @@ export async function updateProduct(id: number, formData: FormData) {
     }
   })
   revalidatePath("/")
-  redirect("/")
+  revalidatePath("/manage-listing")
 }
 
 // Deletes existing product from db

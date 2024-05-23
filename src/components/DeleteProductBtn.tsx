@@ -5,12 +5,12 @@ import { Button } from "./ui/button"
 import { deleteProduct } from "@/app/_actions/product"
 
 // A button to delete product listing
-export default function DeleteProductBtn({ product_id, content }: { product_id: number, content?: JSX.Element }) {
+export default function DeleteProductBtn({ product_id, children }: { product_id: number, children?: React.ReactNode }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="destructive" >
-          {content || "Delete"}
+          {children || "Delete"}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

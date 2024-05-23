@@ -19,8 +19,16 @@ export default function ProductForm({ product }: ProductFormProps) {
     <form action={formAction} >
       <Card className="max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>List a Product</CardTitle>
-          <CardDescription>Fill out the form to list your item</CardDescription>
+          {product == undefined ? // Conditionally renders for listing new product or editing existing one
+            <>
+              <CardTitle>List a Product</CardTitle>
+              <CardDescription>Fill out the form to list your item</CardDescription>
+            </> :
+            <>
+              <CardTitle>Edit your Listing</CardTitle>
+              <CardDescription>Edit the form to modify your listing</CardDescription>
+            </>
+          }
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -76,7 +84,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         <CardFooter className="flex justify-end gap-4" >
           {product && <DeleteProductBtn product_id={product.id} />}
           <Button >
-            {product == undefined ? "List Product" : "Save" }
+            {product == undefined ? "List Product" : "Save"}
           </Button>
         </CardFooter>
       </Card>
