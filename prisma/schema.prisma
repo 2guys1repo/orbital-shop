@@ -29,3 +29,61 @@ model Product {
   seller User @relation(fields: [sellerKindeId], references: [kindeId])
   sellerKindeId String
 }
+
+model buyers {
+  buyer_id       Int     @id @unique
+  purchase_count BigInt
+  users          users   @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model middlemans {
+  middleman_id      Int     @id @unique
+  transaction_count BigInt
+  users             users   @relation(fields: [middleman_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model reports {
+  report_id      Int     @id @default(autoincrement())
+  transaction_id Int
+  buyer_id       Int
+  reason         String  @db.VarChar(2000)
+  is_successful  Boolean
+  users          users   @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  transactions   transactions @relation(fields: [transaction_id], references: [transaction_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model sellers {
+  seller_id     Int     @id @unique
+  sale_count    BigInt
+  is_new_seller Boolean
+  users         users   @relation(fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model transactions {
+  transaction_id                         Int       @id @default(autoincrement())
+  seller_id                              Int?
+  buyer_id                               Int?
+  middleman_id                           Int?
+  date_of_transaction                    DateTime  @db.Date
+  amount                                 Decimal   @db.Decimal
+  is_successful                          Boolean
+  reports                                reports[]
+  users_transactions_buyer_idTousers     users?    @relation("transactions_buyer_idTousers", fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_transactions_middleman_idTousers users?    @relation("transactions_middleman_idTousers", fields: [middleman_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_transactions_seller_idTousers    users?    @relation("transactions_seller_idTousers", fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                            Int            @id @default(autoincrement())
+  username                                      String         @db.VarChar(30)
+  email                                         String         @db.VarChar(255)
+  password                                      String         @db.VarChar(30)
+  created_at                                    DateTime       @db.Date
+  buyers                                        buyers[]
+  middlemans                                    middlemans[]
+  reports                                       reports[]
+  sellers                                       sellers[]
+  transactions_transactions_buyer_idTousers     transactions[] @relation("transactions_buyer_idTousers")
+  transactions_transactions_middleman_idTousers transactions[] @relation("transactions_middleman_idTousers")
+  transactions_transactions_seller_idTousers    transactions[] @relation("transactions_seller_idTousers")
+}
