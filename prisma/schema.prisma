@@ -64,6 +64,7 @@ model transactions {
   seller_id                              Int?
   buyer_id                               Int?
   middleman_id                           Int?
+  product_id                             Int
   date_of_transaction                    DateTime  @db.Date
   amount                                 Decimal   @db.Decimal
   is_successful                          Boolean
@@ -86,4 +87,12 @@ model users {
   transactions_transactions_buyer_idTousers     transactions[] @relation("transactions_buyer_idTousers")
   transactions_transactions_middleman_idTousers transactions[] @relation("transactions_middleman_idTousers")
   transactions_transactions_seller_idTousers    transactions[] @relation("transactions_seller_idTousers")
+}
+
+model products {
+  product_id                                    Int @id @default(autoincrement())
+  seller_id                                     Int?
+  price                                         Decimal        @db.Decimal
+  description                                   String         @db.varChar(255)
+  imagePath                                     String         @db.varChar(255)
 }
