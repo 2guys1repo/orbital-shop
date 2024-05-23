@@ -1,14 +1,12 @@
-"use client"
-
 import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { addProduct, deleteProduct, updateProduct } from "@/app/_actions/product"
+import { addProduct, updateProduct } from "@/app/_actions/product"
 import { ProductType } from "@/lib/types"
 import Image from "next/image"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import DeleteProductBtn from "./DeleteProductBtn"
 
 type ProductFormProps = {
   product?: ProductType,
@@ -76,36 +74,13 @@ export default function ProductForm({ product }: ProductFormProps) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4" >
-          {product && <DeleteBtn product_id={product.id} />}
+          {product && <DeleteProductBtn product_id={product.id} />}
           <Button >
             {product == undefined ? "List Product" : "Save" }
           </Button>
         </CardFooter>
       </Card>
     </form>
-  )
-}
-
-function DeleteBtn({ product_id }: { product_id: number }) {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger>Delete</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your listing
-            and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button asChild variant="destructive" onClick={() => deleteProduct(product_id)}>
-            <AlertDialogAction>Yes, delete listing</AlertDialogAction>
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   )
 }
 
