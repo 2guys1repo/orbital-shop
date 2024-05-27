@@ -16,7 +16,7 @@ model User {
   username         String            @unique
   email            String            @unique
   name             String
-  role             String // TODO enum not supported on sqlite, (basic, middleman, admin)
+  role             String            @default("basic") // TODO enum not supported on sqlite, (basic, middleman, admin)
   sellerDetails    SellerDetails?
   buyerDetails     BuyerDetails?
   middlemanDetails MiddlemanDetails?
