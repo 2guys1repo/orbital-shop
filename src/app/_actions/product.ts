@@ -1,14 +1,12 @@
 "use server"
 
 // File contains actions to interact with Product model on the database
-
 import { z } from "zod";
 import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { createUserIfAbsent } from "./user";
 
 // Schema describing an image file
 const imageSchema = z.instanceof(File, {
@@ -25,19 +23,18 @@ const postSchema = z.object({
 
 // Creates a new product in the database
 export async function addProduct(formData: FormData) {
-  const { getUser, isAuthenticated }= getKindeServerSession();
+  const { getUser, isAuthenticated } = getKindeServerSession();
   if (!await isAuthenticated()) redirect("/api/auth/login");
-  
+
   const kindeUser = await getUser() // a kinde user
-  if (!kindeUser) return;
-  await createUserIfAbsent(kindeUser)
+  if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
   }
 
   const data = result.data;
-  await fs.mkdir("public/products", {recursive: true });
+  await fs.mkdir("public/products", { recursive: true });
   const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
   await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
 
@@ -47,7 +44,7 @@ export async function addProduct(formData: FormData) {
       description: data.description,
       price: data.price,
       imagePath: imagePath,
-      sellerKindeId: kindeUser.id,
+      sellerId: kindeUser.id,
     }
   })
   revalidatePath("/")
@@ -61,25 +58,25 @@ const updateSchema = postSchema.extend({
 
 // Updates existing product in the database
 export async function updateProduct(id: number, formData: FormData) {
-  const { getUser, isAuthenticated }= getKindeServerSession();
+  const { getUser, isAuthenticated } = getKindeServerSession();
   if (!await isAuthenticated()) redirect("/api/auth/login");
-  const kinde_user = await getUser();
-  if (!kinde_user) return; // Can throw in future
-  
+  const kindeUser = await getUser();
+  if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
+
   const result = updateSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
   }
 
   const data = result.data;
-  const product = await prisma.product.findFirst({ where: { id }})
+  const product = await prisma.product.findFirst({ where: { id } })
   if (!product) return notFound();
-  if (product.sellerKindeId != kinde_user.id) return; // Can throw unauthorise
+  if (product.sellerId != kindeUser.id) throw new Error("Unauthorised");
 
   let imagePath = product.imagePath;
   if (data.image != undefined && data.image.size > 0) {
     await fs.unlink(`public${product.imagePath}`) // removes existing image
-    await fs.mkdir("public/products", {recursive: true });
+    await fs.mkdir("public/products", { recursive: true });
     imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
     await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
   }
@@ -127,7 +124,7 @@ export async function getProductById(product_id: number) {
 export async function getProductsOfUser(kindeId: string) {
   return await prisma.product.findMany({
     where: {
-      sellerKindeId: kindeId
+      sellerId: kindeId
     }
   })
 }
