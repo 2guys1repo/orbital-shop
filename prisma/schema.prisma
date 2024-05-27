@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is the Prisma schema file,
 
 generator client {
   provider = "prisma-client-js"
@@ -10,16 +9,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// basic user model
+// User account details
 model User {
-  id Int @id @default(autoincrement())
-  name String @unique
-  email String @unique
-  products Product[]
-  kindeId String @unique
+  id               Int               @id @default(autoincrement())
+  kindeId          String            @unique
+  username         String            @unique
+  email            String            @unique
+  name             String
+  role             String            @default("basic") // TODO enum not supported on sqlite, (basic, middleman, admin)
+  sellerDetails    SellerDetails?
+  buyerDetails     BuyerDetails?
+  middlemanDetails MiddlemanDetails?
 }
 
-// Most basic product model
+// Contains records for a buyer 
+model BuyerDetails {
+  id            Int     @id @default(autoincrement())
+  userId        String  @unique
+  purchaseCount Int     @default(0)
+  orders        Order[] // orders for a purchase
+  user          User    @relation(fields: [userId], references: [kindeId])
+}
+
+// Contains records for a seller
+model SellerDetails {
+  id         Int       @id @default(autoincrement())
+  userId     String    @unique
+  saleCount  Int       @default(0)
+  sellerType String    @default("new") // TODO convert to enum, (new, experienced)
+  products   Product[] // seller can have many products
+  orders     Order[] // seller can have many orders for sale
+  user       User      @relation(fields: [userId], references: [kindeId])
+}
+
 model Product {
   id Int @id @default(autoincrement())
   title String
@@ -28,71 +50,4 @@ model Product {
   imagePath String
   seller User @relation(fields: [sellerKindeId], references: [kindeId])
   sellerKindeId String
-}
-
-model buyers {
-  buyer_id       Int     @id @unique
-  purchase_count BigInt
-  users          users   @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model middlemans {
-  middleman_id      Int     @id @unique
-  transaction_count BigInt
-  users             users   @relation(fields: [middleman_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model reports {
-  report_id      Int     @id @default(autoincrement())
-  transaction_id Int
-  buyer_id       Int
-  reason         String  @db.VarChar(2000)
-  is_successful  Boolean
-  users          users   @relation(fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  transactions   transactions @relation(fields: [transaction_id], references: [transaction_id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model sellers {
-  seller_id     Int     @id @unique
-  sale_count    BigInt
-  is_new_seller Boolean
-  users         users   @relation(fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model transactions {
-  transaction_id                         Int       @id @default(autoincrement())
-  seller_id                              Int?
-  buyer_id                               Int?
-  middleman_id                           Int?
-  product_id                             Int
-  date_of_transaction                    DateTime  @db.Date
-  amount                                 Decimal   @db.Decimal
-  is_successful                          Boolean
-  reports                                reports[]
-  users_transactions_buyer_idTousers     users?    @relation("transactions_buyer_idTousers", fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_transactions_middleman_idTousers users?    @relation("transactions_middleman_idTousers", fields: [middleman_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_transactions_seller_idTousers    users?    @relation("transactions_seller_idTousers", fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model users {
-  id                                            Int            @id @default(autoincrement())
-  username                                      String         @db.VarChar(30)
-  email                                         String         @db.VarChar(255)
-  password                                      String         @db.VarChar(30)
-  created_at                                    DateTime       @db.Date
-  buyers                                        buyers[]
-  middlemans                                    middlemans[]
-  reports                                       reports[]
-  sellers                                       sellers[]
-  transactions_transactions_buyer_idTousers     transactions[] @relation("transactions_buyer_idTousers")
-  transactions_transactions_middleman_idTousers transactions[] @relation("transactions_middleman_idTousers")
-  transactions_transactions_seller_idTousers    transactions[] @relation("transactions_seller_idTousers")
-}
-
-model products {
-  product_id                                    Int @id @default(autoincrement())
-  seller_id                                     Int?
-  price                                         Decimal        @db.Decimal
-  description                                   String         @db.varChar(255)
-  imagePath                                     String         @db.varChar(255)
 }
