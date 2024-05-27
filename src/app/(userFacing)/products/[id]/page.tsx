@@ -6,17 +6,18 @@ import Link from "next/link"
 import { getProductById } from "@/app/_actions/product"
 import { getUserByKindeId } from "@/app/_actions/user"
 import { ProductType, UserType } from "@/lib/types"
+import { notFound } from "next/navigation"
 
 export default async function Product({ params }: { params: { id: string } }) {
   const product = await getProductById(parseInt(params.id))
-  if (!product) return;
-  const seller = await getUserByKindeId(product.sellerKindeId)
-  if(!seller) return;
+  if (!product) throw notFound();
+  const seller = await getUserByKindeId(product.sellerId)
+  if (!seller) throw new Error("User is not registered");
   return (
     <>
-      <ProductPageHeader product={product}/>
+      <ProductPageHeader product={product} />
       <Separator />
-      <SellerInformation seller={seller}/>
+      <SellerInformation seller={seller} />
     </>
   )
 }
@@ -41,7 +42,7 @@ function ProductPageHeader({ product }: { product: ProductType }) {
   )
 }
 
-function SellerInformation({ seller }: { seller: UserType}) {
+function SellerInformation({ seller }: { seller: UserType }) {
   return (
     <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto py-12 px-4">
       <div>

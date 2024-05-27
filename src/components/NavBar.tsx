@@ -4,13 +4,14 @@ import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types"
-import { createUserIfAbsent } from "@/app/_actions/user";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { getDbUser } from "@/app/_actions/user";
 
 // TODO can fix css 
 export default async function NavBar() {
   const { getUser } = getKindeServerSession()
-  const user = await getUser();
+  const kindeUser = await getUser();
+  const user = (kindeUser ? await getDbUser(kindeUser) : null); // Checks whether user is logged in
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
       <NavSheet />
@@ -23,7 +24,8 @@ export default async function NavBar() {
         </Link>
         {user ? // Conditionally renders based on whether user is logged in
           <>
-            <UserProfileDropdown kindeUser={user} />
+            {/* User is logged in */}
+            <UserProfileDropdown name={user.name} dbId={user.id} />
             <LogoutLink
               className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
             >
@@ -31,6 +33,7 @@ export default async function NavBar() {
             </LogoutLink>
           </> :
           <>
+            {/* User not logged in */}
             <RegisterLink
               className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
             >
@@ -55,17 +58,17 @@ export default async function NavBar() {
 }
 
 // Returns a Dropdown menu
-function UserProfileDropdown({ kindeUser }: { kindeUser: KindeUser }) {
+function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
       >
-        Welcome, {kindeUser.given_name}
+        Welcome, {name}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem >
-          <UserProfileLink kindeUser={kindeUser} />
+          <Link href={`/users/${dbId}`}> Profile </Link>
         </DropdownMenuItem>
         <DropdownMenuItem >
           <Link href="/manage-listing">Manage Listings </Link>
@@ -75,19 +78,6 @@ function UserProfileDropdown({ kindeUser }: { kindeUser: KindeUser }) {
 
   )
 }
-
-// Returns a link to the user profile
-async function UserProfileLink({ kindeUser }: { kindeUser: KindeUser }) {
-  const dbUser = await createUserIfAbsent(kindeUser)
-  return (
-    <Link
-      href={`/users/${dbUser?.id}`}
-    >
-      Profile
-    </Link>
-  )
-}
-
 
 // Hamburger nav menu for when screen size shrinks
 function NavSheet() {

@@ -11,9 +11,9 @@ import Link from "next/link"
 
 export default async function ListingsPage() {
   const { getUser, isAuthenticated } = getKindeServerSession();
-  if (!await isAuthenticated()) redirect("/api/auth/login"); // Not logged in
+  if (!await isAuthenticated()) redirect("/api/auth/login"); // Not logged in, not suppose to have access
   const kindeUser = await getUser();
-  if (!kindeUser) redirect("/");
+  if (!kindeUser) throw Error("Unable to manage listing"); // kinde server problem
   const products = await getProductsOfUser(kindeUser.id);
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
