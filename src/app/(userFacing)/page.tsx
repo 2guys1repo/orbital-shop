@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { getAllProducts } from "../_actions/product"
+import { JSX } from "react"
 
 // Main home page for users
 export default function HomePage() {
@@ -41,7 +42,7 @@ async function ProductGrid() {
   const products = await getAllProducts();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {products.map(product => (
+      {products.map((product: JSX.IntrinsicAttributes & { title: string; description: string; price: number; imagePath: string; id: number }) => (
         <ProductCard key={product.id} {...product} />
       ))}
     </div>
