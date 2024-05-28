@@ -43,47 +43,11 @@ model SellerDetails {
 }
 
 model Product {
-  id            Int           @id @default(autoincrement())
-  title         String
-  description   String
-  price         Float
-  imagePath     String
-  sellerId      String
-  orderItems    OrderItem[] // product can belong to many order item, bought multiple times
-  sellerDetails SellerDetails @relation(fields: [sellerId], references: [userId])
-}
-
-// records for a middleman
-model MiddlemanDetails {
-  id              Int     @id @default(autoincrement())
-  userId          String  @unique
-  ordersProcessed Int     @default(0)
-  orders          Order[] // orders to process
-  user            User    @relation(fields: [userId], references: [kindeId])
-}
-
-// Order has one OrderItem atm
-model Order {
-  id               Int              @id @default(autoincrement())
-  totalAmount      Float
-  buyerId          String
-  sellerId         String
-  middlemanId      String
-  orderDate        DateTime         @default(now())
-  status           String           @default("pending") // TODO enum (pending, delivered)
-  orderItems       OrderItem[] // An Order can have many order items in it
-  middlemanDetails MiddlemanDetails @relation(fields: [middlemanId], references: [userId])
-  buyerDetails     BuyerDetails     @relation(fields: [buyerId], references: [userId])
-  sellerDetails    SellerDetails    @relation(fields: [sellerId], references: [userId])
-}
-
-// captures the state when a product is transacted
-model OrderItem {
-  id        Int     @id @default(autoincrement())
-  priceSold Float
-  orderId   Int
-  productId Int
-  quantity  Int     @default(1)
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  price Float
+  imagePath String
+  seller User @relation(fields: [sellerKindeId], references: [kindeId])
+  sellerKindeId String
 }
