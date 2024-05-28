@@ -26,11 +26,11 @@ export async function POST(req: Request) {
     switch (event?.type) {
       case "user.authenticated":
         // handle user authenticated event
-        console.log(event.data.user.id);
+        // console.log(event.data.user.id);
         break;
       case "user.created":
         // handle user created event
-        console.log(event.data);
+        // console.log(event.data);
         await createUser(event.data.user) // Creates the user in our database
         break;
       default:

@@ -6,7 +6,7 @@ import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getAuthenticatedUser } from "./auth";
 
 // Schema describing an image file
 const imageSchema = z.instanceof(File, {
@@ -23,10 +23,7 @@ const postSchema = z.object({
 
 // Creates a new product in the database
 export async function addProduct(formData: FormData) {
-  const { getUser, isAuthenticated } = getKindeServerSession();
-  if (!await isAuthenticated()) redirect("/api/auth/login");
-
-  const kindeUser = await getUser() // a kinde user
+  const kindeUser = await getAuthenticatedUser();
   if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
@@ -58,9 +55,7 @@ const updateSchema = postSchema.extend({
 
 // Updates existing product in the database
 export async function updateProduct(id: number, formData: FormData) {
-  const { getUser, isAuthenticated } = getKindeServerSession();
-  if (!await isAuthenticated()) redirect("/api/auth/login");
-  const kindeUser = await getUser();
+  const kindeUser = await getAuthenticatedUser();
   if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
 
   const result = updateSchema.safeParse(Object.fromEntries(formData.entries()))
@@ -126,5 +121,12 @@ export async function getProductsOfUser(kindeId: string) {
     where: {
       sellerId: kindeId
     }
+  })
+}
+
+export async function getProductName(id: number) {
+  return await prisma.product.findUniqueOrThrow({
+    where: { id },
+    select: { title: true }
   })
 }
