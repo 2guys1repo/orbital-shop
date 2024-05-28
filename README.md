@@ -85,16 +85,14 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-AuthentiCart is primarily motivated by the issue of rising product authenticity issues present in today's e-commerce platforms. 
+AuthentiCart, an Apollo-level project, is an e-commerce platform primarily motivated by the issue of rising product authenticity issues present in today's e-commerce platforms. 
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
+## What makes us different?
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+AuthentiCart has a main core feature - promising buyers authenticity of goods sold on the platform. We will implement this through introducing a new user of the platform - middleman.
+Middleman has the role of vetting all new sellers' goods and ensuring that the goods sold are as described. This vetting will be done through our warehouse.
+After enough successful transactions, sellers will be considered 'experienced' and will be able to bypass this vetting system.
+However, buyers are still able to report a transaction if a good is deemed to be faulty, or not as described.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -254,7 +252,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
-[SQLite-icon]: https://example.com/sqlite.png
+[SQLite-icon]: https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/SQLite370.svg/640px-SQLite370.svg.png
 [SQLite-url]: https://sqlite.org
-[TypeScript-icon]: https://example.com/typescript.png
+[TypeScript-icon]: https://e7.pngegg.com/pngimages/616/528/png-clipart-angularjs-typescript-javascript-vue-js-others-blue-angle-thumbnail.png
 [TypeScript-url]: https://www.typescriptlang.org
