@@ -34,7 +34,7 @@ function ProductPageHeader({ product }: { product: ProductType }) {
         <div className="flex items-center gap-2">
           <span className="text-4xl font-bold">${product.price}</span>
           <Button asChild size="lg">
-            <Link href="/">Buy Now</Link>
+            <Link href={`/buy/${product.id}`}>Buy Now</Link>
           </Button>
         </div>
       </div>

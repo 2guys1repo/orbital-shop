@@ -73,6 +73,12 @@ function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
         <DropdownMenuItem >
           <Link href="/manage-listing">Manage Listings </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem >
+          <Link href="/purchases">My Purchases</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem >
+          <Link href="/sales">My Sales</Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
 

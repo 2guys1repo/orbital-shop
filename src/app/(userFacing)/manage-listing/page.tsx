@@ -1,18 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { getProductsOfUser } from "@/app/_actions/product"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
-import { redirect } from "next/navigation"
 import DeleteProductBtn from "@/components/DeleteProductBtn"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import ProductForm from "@/components/ProductForm"
 import { ProductType } from "@/lib/types"
 import Link from "next/link"
+import { getAuthenticatedUser } from "@/app/_actions/auth"
 
 export default async function ListingsPage() {
-  const { getUser, isAuthenticated } = getKindeServerSession();
-  if (!await isAuthenticated()) redirect("/api/auth/login"); // Not logged in, not suppose to have access
-  const kindeUser = await getUser();
+  const kindeUser = await getAuthenticatedUser(); // Not logged in, not suppose to have access
   if (!kindeUser) throw Error("Unable to manage listing"); // kinde server problem
   const products = await getProductsOfUser(kindeUser.id);
   return (
