@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import StatusBadge from "./StatusBadge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { FaReceipt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 
 type OrderType = {
   id: number,
@@ -41,20 +44,14 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
                   <TableCell>{order.sellerName || order.buyerName}</TableCell>
                   <TableCell>{order.orderDate}</TableCell>
                   <TableCell>
-                    <Badge >{order.orderStatus}</Badge>
+                    <StatusBadge status={order.orderStatus} />
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Link href={`/${isSeller ? 'sales' : 'purchases'}/${order.id}`}>
-                        <Button size="icon" variant="outline">
-                          <EyeIcon className="h-4 w-4" />
-                          <span className="sr-only">View</span>
-                        </Button>
+                        <ReceiptIconWithTooltip />
                       </Link>
-                      <Button className="text-red-500" size="icon" variant="outline">
-                        <Trash2Icon className="h-4 w-4" />
-                        <span className="sr-only">Cancel</span>
-                      </Button>
+                      <TrashIconWithTooltip />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -67,48 +64,38 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
   )
 }
 
-
-// SVG ASSETS
-function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
+// Receipt icon wrapped with a tooltip
+function ReceiptIconWithTooltip() {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button size="icon" variant="outline">
+            <FaReceipt />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>View Order Details</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
-function Trash2Icon(props: React.SVGProps<SVGSVGElement>) {
+// Trash icon wrapped with a tooltip
+function TrashIconWithTooltip() {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-      <line x1="10" x2="10" y1="11" y2="17" />
-      <line x1="14" x2="14" y1="11" y2="17" />
-    </svg>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button className="text-red-500" size="icon" variant="outline">
+            <FaTrashAlt />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Delete</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
-

@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { getDbUser } from "@/app/_actions/user";
+import { getAuthorizedMiddleman } from "@/app/_actions/auth";
 
 // TODO can fix css 
 export default async function NavBar() {
@@ -58,7 +58,8 @@ export default async function NavBar() {
 }
 
 // Returns a Dropdown menu
-function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
+async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
+  const middleman = await getAuthorizedMiddleman();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -67,18 +68,23 @@ function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
         Welcome, {name}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem >
-          <Link href={`/users/${dbId}`}> Profile </Link>
+        <DropdownMenuItem asChild>
+          <Link href={`/users/${dbId}`} className="cursor-pointer"> Profile </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem >
-          <Link href="/manage-listing">Manage Listings </Link>
+        <DropdownMenuItem asChild >
+          <Link href="/manage-listing" className="cursor-pointer">Manage Listings </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem >
-          <Link href="/purchases">My Purchases</Link>
+        <DropdownMenuItem asChild >
+          <Link href="/purchases" className="cursor-pointer">My Purchases</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem >
-          <Link href="/sales">My Sales</Link>
+        <DropdownMenuItem asChild>
+          <Link href="/sales" className="cursor-pointer">My Sales</Link>
         </DropdownMenuItem>
+        {middleman &&
+          <DropdownMenuItem asChild>
+            <Link href="/orders" className="cursor-pointer">Manage Orders</Link>
+          </DropdownMenuItem>
+        }
       </DropdownMenuContent>
     </DropdownMenu>
 
