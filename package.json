@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"npm run proxy\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "proxy": "lt -p 3000 -s orbitalshop"
+    "lint": "next lint"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.2.10",
@@ -31,6 +30,7 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.2.1",
     "stripe": "^15.8.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",

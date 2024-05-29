@@ -61,3 +61,16 @@ export async function createUser(kindeUser: KindeUserResponse) {
   return user;
 }
 
+// return the names of users within the id array
+export async function getUserNamesByIds(ids: string[]) {
+  const users = await prisma.user.findMany({
+    where: {
+      kindeId: { in: ids }
+    },
+    select: {
+      kindeId: true,
+      name: true,
+    }
+  })
+  return users;
+}
