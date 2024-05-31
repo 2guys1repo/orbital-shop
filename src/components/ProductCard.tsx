@@ -13,7 +13,7 @@ type ProductCardProps = {
 }
 
 // Renders a card for individual products
-export default function ProductCard({ title, description, price, imagePath, id:post_id }: ProductCardProps) {
+export default function ProductCard({ title, description, price, imagePath, id: post_id }: ProductCardProps) {
   return (
     <Card className="w-full max-w-sm">
       <Image

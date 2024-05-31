@@ -1,3 +1,5 @@
+"use client"
+
 import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -5,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { addProduct, updateProduct } from "@/app/_actions/product"
 import { ProductType } from "@/lib/types"
-import Image from "next/image"
 import DeleteProductBtn from "./DeleteProductBtn"
+import Utform from "./Utform"
+import { useFormState, useFormStatus } from "react-dom"
 
 type ProductFormProps = {
   product?: ProductType,
@@ -15,8 +18,9 @@ type ProductFormProps = {
 export default function ProductForm({ product }: ProductFormProps) {
   // sets formAction to addProduct for creating new post or updateProduct for editing post 
   const formAction = product == undefined ? addProduct : updateProduct.bind(null, product.id)
+  const [error, action] = useFormState(formAction, {})
   return (
-    <form action={formAction} >
+    <form action={action} >
       <Card className="max-w-md mx-auto">
         <CardHeader>
           {product == undefined ? // Conditionally renders for listing new product or editing existing one
@@ -37,6 +41,7 @@ export default function ProductForm({ product }: ProductFormProps) {
               <Input className="mt-1" id="title" name="title" placeholder="Enter listing title" type="text" required /> :
               <Input className="mt-1" id="title" name="title" defaultValue={product.title} type="text" required />
             }
+            {error?.title && <div className="text-destructive">{error.title}</div>}
           </div>
           <div>
             <Label htmlFor="description">Description</Label>
@@ -44,6 +49,7 @@ export default function ProductForm({ product }: ProductFormProps) {
               <Textarea className="mt-1" id="description" name="description" placeholder="Include details for other buyers" rows={3} required /> :
               <Textarea className="mt-1" id="description" name="description" defaultValue={product.description} rows={3} required />
             }
+            {error?.description && <div className="text-destructive">{error.description}</div>}
           </div>
           <div>
             <Label htmlFor="price">Price of your listing</Label>
@@ -55,61 +61,29 @@ export default function ProductForm({ product }: ProductFormProps) {
                 <Input className="block w-full flex-1 rounded-none rounded-r-md" id="price" name="price" placeholder="0.00" type="number" required /> :
                 <Input className="block w-full flex-1 rounded-none rounded-r-md" id="price" name="price" defaultValue={product.price} type="number" required />
               }
+              {error?.price && <div className="text-destructive">{error.price}</div>}
             </div>
           </div>
           <div>
-            <Label
-              htmlFor="image"
-              className="cursor-pointer"
-            >
-              Product Image
-              <div className=" mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 ">
-                <div className="space-y-1 text-center">
-                  {product === undefined ?
-                    <UploadIcon className="mx-auto h-12 w-12 text-gray-400" /> :
-                    <Image src={product.imagePath} alt="Product Image" height={100} width={100} className="mx-auto " />
-                  }
-                  <div className="flex text-sm text-gray-600 dark:text-gray-400">
-                    <div>
-                      <span className="font-bold">Click here to Upload a file</span>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 10MB</p>
-                      <Input className="cursor-pointer" id="image" name="image" type="file" required={product == undefined} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Label>
+            {/* Uploadthing form field */}
+            <Utform existingPath={product?.imagePath} />
+            {error?.imageKey && <div className="text-destructive">Remember to upload image</div>}
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4" >
           {product && <DeleteProductBtn product_id={product.id} />}
-          <Button >
-            {product == undefined ? "List Product" : "Save"}
-          </Button>
+          <SubmitButton />
         </CardFooter>
       </Card>
     </form>
   )
 }
 
-// SVG assets
-function UploadIcon(props: React.SVGProps<SVGSVGElement>) {
+function SubmitButton() {
+  const { pending } = useFormStatus()
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" x2="12" y1="3" y2="15" />
-    </svg>
+    <Button type="submit" disabled={pending}>
+      {pending ? "Saving..." : "Save"}
+    </Button>
   )
 }
