@@ -5,8 +5,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // User account details
@@ -16,10 +17,17 @@ model User {
   username         String            @unique
   email            String            @unique
   name             String
-  role             String            @default("basic") // TODO enum not supported on sqlite, (basic, middleman, admin)
+  role             UserRole          @default(BASIC)
   sellerDetails    SellerDetails?
   buyerDetails     BuyerDetails?
   middlemanDetails MiddlemanDetails?
+}
+
+// Different roles of a user
+enum UserRole {
+  BASIC
+  MIDDLEMAN
+  ADMIN
 }
 
 // Contains records for a buyer 
@@ -33,13 +41,20 @@ model BuyerDetails {
 
 // Contains records for a seller
 model SellerDetails {
-  id         Int       @id @default(autoincrement())
-  userId     String    @unique
-  saleCount  Int       @default(0)
-  sellerType String    @default("new") // TODO convert to enum, (new, experienced)
+  id         Int        @id @default(autoincrement())
+  userId     String     @unique
+  saleCount  Int        @default(0)
+  sellerType SellerType @default(NEW)
   products   Product[] // seller can have many products
   orders     Order[] // seller can have many orders for sale
-  user       User      @relation(fields: [userId], references: [kindeId])
+  user       User       @relation(fields: [userId], references: [kindeId])
+}
+
+// Different types of a seller
+enum SellerType {
+  NEW
+  EXPERIENCED
+  SUSPENDED
 }
 
 model Product {
@@ -70,11 +85,18 @@ model Order {
   sellerId         String
   middlemanId      String
   orderDate        DateTime         @default(now())
-  status           String           @default("pending") // TODO enum (pending, shipped, rejected)
+  status           OrderStatus      @default(PENDING)
   orderItems       OrderItem[] // An Order can have many order items in it
   middlemanDetails MiddlemanDetails @relation(fields: [middlemanId], references: [userId])
   buyerDetails     BuyerDetails     @relation(fields: [buyerId], references: [userId])
   sellerDetails    SellerDetails    @relation(fields: [sellerId], references: [userId])
+}
+
+// Different states of an order
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  REJECTED
 }
 
 // captures the state when a product is transacted
