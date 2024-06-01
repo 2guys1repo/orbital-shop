@@ -4,8 +4,9 @@ import { useTransition } from "react"
 import { DropdownMenuItem } from "./ui/dropdown-menu"
 import { useRouter } from "next/navigation";
 import { updateOrderStatus } from "@/app/_actions/order";
+import { OrderStatus } from "@prisma/client";
 
-export function DropdownItem({ nextStatus, orderId, children }: { nextStatus: string, orderId: number, children: React.ReactNode }) {
+export function DropdownItem({ nextStatus, orderId, children }: { nextStatus: OrderStatus, orderId: number, children: React.ReactNode }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   return (

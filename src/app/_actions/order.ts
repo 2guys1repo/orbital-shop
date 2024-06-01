@@ -6,6 +6,8 @@ import Stripe from "stripe"
 import { getProductName } from "./product";
 import { getUserNamesByIds } from "./user";
 import { getAuthorizedMiddleman } from "./auth";
+import { OrderStatus } from "@prisma/client";
+
 // create an order 
 export async function createOrder(charge: Stripe.Charge) {
   const { buyerId, sellerId, middlemanId, productId } = charge.metadata;
@@ -111,11 +113,14 @@ export async function getOrderDetailsById(id: number, role: string) {
 
 // Returns all orders in the db associated to the middleman
 export async function getMiddlemanOrders(userId: string) {
-  const mmDetails = await prisma.middlemanDetails.findUniqueOrThrow({
+  // create if absent
+  const mmDetails = await prisma.middlemanDetails.upsert({
     where: { userId },
-    include: { orders: true }
+    update: {},
+    create: { userId },
+    include: { orders: true },
   })
-  const transformedOrders = Promise.all(mmDetails.orders.map(async (order) => {
+  const transformedOrders = await Promise.all(mmDetails.orders.map(async (order) => {
     const users = await getUserNamesByIds([order.buyerId, order.sellerId])
     return {
       id: order.id,
@@ -128,7 +133,7 @@ export async function getMiddlemanOrders(userId: string) {
   return transformedOrders
 }
 
-export async function updateOrderStatus(id: number, nextStatus: string) {
+export async function updateOrderStatus(id: number, nextStatus: OrderStatus) {
   const user = await getAuthorizedMiddleman();
   if (!user) throw new Error("An error occured, unable to update order status")
   await prisma.order.update({

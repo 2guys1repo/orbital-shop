@@ -5,7 +5,6 @@ type OrderDetail = {
   id: number,
   orderDate: string,
   orderTotal: number,
-  orderStatus: string,
   role: string,
   name: string,
   email: string,

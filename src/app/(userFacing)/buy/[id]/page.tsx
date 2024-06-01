@@ -22,7 +22,7 @@ export default async function PurchasePage({ params }: { params: { id: string } 
     metadata: {
       buyerId: user.id,
       sellerId: product.sellerId,
-      middlemanId: "kp_4c4b25b7a8ee4a208017531c59dca211", // TODO all same tag for now
+      middlemanId: "kp_ca26602cdb734963a67d4e5841c11c8a", // TODO all same tag for now
       productId: productId,
     }
   })
