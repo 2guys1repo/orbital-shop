@@ -9,6 +9,18 @@ const client = jwksClient({
 });
 
 export async function POST(req: Request) {
+  if (process.env.NODE_ENV == "production") {
+    // forwards authentication request if on product
+    const localUrl = "https://relative-goblin-totally.ngrok-free.app/api/kinde-webhook"
+    const newReq = new Request(localUrl, {
+      method: req.method,
+      headers: req.headers,
+      body: req.body,
+      //@ts-expect-error
+      duplex: "half",
+    })
+    fetch(newReq)
+  }
   try {
     // Get the token from the request
     const token = await req.text();
