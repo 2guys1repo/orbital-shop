@@ -16,8 +16,9 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error(error.message);
-      return NextResponse.json("Bad Request", { status: 400 })
+      // console.error(error.message);
+      console.log("Req was made by another dev or Bad Stripe Request")
+      return NextResponse.json("Req was made by another dev or Bad Request", { status: 200 }) // returning 200 so stripe doesnt retry
     }
   }
   return NextResponse.json({ status: 200, statusText: "received" });
