@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     )
     if (event.type == "charge.succeeded") {
       const charge = event.data.object;
-      createOrder(charge) // creates the order with the charge details
+      await createOrder(charge) // creates the order with the charge details
     }
   } catch (error) {
     if (error instanceof Error) {
