@@ -21,10 +21,17 @@ export enum SellerType {
 }
 
 // Different roles of a user
-export enum UserRole {
-  SELLER = "SELLER",
-  BUYER = "BUYER",
-  MIDDLEMAN = "MIDDLEMAN",
-  ADMIN = "ADMIN",
-  BASIC = "BASIC",
+export const UserRole: {
+  SELLER: "SELLER",
+  BUYER: "BUYER",
+  MIDDLEMAN: "MIDDLEMAN",
+  ADMIN: "ADMIN",
+  BASIC: "BASIC",
+} = {
+  SELLER: "SELLER",
+  BUYER: "BUYER",
+  MIDDLEMAN: "MIDDLEMAN",
+  ADMIN: "ADMIN",
+  BASIC: "BASIC",
 }
+export type UserRole = typeof UserRole[keyof typeof UserRole]

@@ -3,7 +3,6 @@
 // File contains actions to interact with User model on the database
 import prisma from "@/lib/db";
 import { UserRole } from "@/lib/types";
-import { isInStringEnum } from "@/lib/utils";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 // Gets a single db user by kinde id
@@ -82,9 +81,7 @@ export async function getAllUsers() {
 }
 
 export async function updateDbUserRole(id: string, nextRole: UserRole) {
-  console.log(nextRole)
-  if (nextRole != UserRole.ADMIN) return;
-  if (!isInStringEnum(nextRole, UserRole)) throw new Error("Invalid user role")
+  if (nextRole == UserRole.BUYER || nextRole == UserRole.SELLER) throw new Error("Invalid user role");
   const user = await prisma.user.update({
     where: { kindeId: id },
     data: {

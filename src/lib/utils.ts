@@ -9,7 +9,3 @@ export function capitalizeFirstLetter(string: string) {
   if (!string) return string; // Handle empty strings
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
-
-export function isInStringEnum(value: string, enumeration: any): boolean {
-  return Object.values(enumeration).includes(value);
-}
