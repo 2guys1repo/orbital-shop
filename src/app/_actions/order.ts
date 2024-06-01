@@ -11,20 +11,24 @@ import { OrderStatus } from "@prisma/client";
 // create an order 
 export async function createOrder(charge: Stripe.Charge) {
   const { buyerId, sellerId, middlemanId, productId } = charge.metadata;
-  const order = await prisma.order.create({
-    data: {
-      buyerId,
-      sellerId,
-      middlemanId,
-      totalAmount: charge.amount, // TODO currently assumes one item
-      orderItems: {
-        create: {
-          priceSold: charge.amount,
-          productId: parseInt(productId)
+  try {
+    const order = await prisma.order.create({
+      data: {
+        buyerId,
+        sellerId,
+        middlemanId,
+        totalAmount: charge.amount, // TODO currently assumes one item
+        orderItems: {
+          create: {
+            priceSold: charge.amount,
+            productId: parseInt(productId)
+          }
         }
       }
-    }
-  })
+    })
+  } catch (error) {
+    console.log("A req was made by a dev, or an error occured while creating an order")
+  }
   // console.log(order)
 }
 

@@ -21,7 +21,7 @@ function Form() {
     if (!stripe || !elements) return;
     stripe.confirmPayment({
       elements, confirmParams: {
-        return_url: "https://orbital-shop.vercel.app/buy/success" // TODO can use env
+        return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/buy/success` // either dev or prod url
       }
     })
   }
