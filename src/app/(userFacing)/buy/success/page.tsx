@@ -24,7 +24,7 @@ function SuccessCard() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-500 ">
-            Thank you for your order! We're processing your request and you'll receive your items soon.
+            Thank you for your order! We&apos;re processing your request and you&apos;ll receive your items soon.
           </p>
           <Link
             className="inline-flex items-center justify-center h-10 px-6 rounded-md bg-gray-900 text-gray-50 font-medium transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"

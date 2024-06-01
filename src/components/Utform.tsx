@@ -30,7 +30,7 @@ export default function Utform({ existingPath }: { existingPath?: string }) {
         />
         <div className="mt-2 grid gap-2 ">
           {images.map(image => (
-            <a href={image.url} target="_blank">
+            <a href={image.url} target="_blank" key={image.key}>
               <div className="flex items-center justify-between cursor-pointer bg-gray-100 p-4 rounded-lg ">
                 <div className="flex items-center gap-2">
                   <FaImage />

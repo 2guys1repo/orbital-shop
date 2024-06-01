@@ -1,24 +1,23 @@
+import { capitalizeFirstLetter } from "@/lib/utils";
 import { Badge } from "./ui/badge";
+import { OrderStatus } from "@prisma/client";
 
 // Returns a colored badge based on status
-export default function StatusBadge({ status }: { status: string }) {
+export default function StatusBadge({ status }: { status: OrderStatus }) {
   let color = "";
   switch (status) {
-    case "pending":
+    case OrderStatus.PENDING:
       color = "cursor-pointer bg-yellow-500 text-white";
       break;
-    case "shipped":
+    case OrderStatus.SHIPPED:
       color = "cursor-pointer bg-green-500 text-white";
       break;
-    case "rejected":
+    case OrderStatus.REJECTED:
       color = "cursor-pointer bg-red-500 text-white";
       break;
   }
   return <Badge className={color}>
-    {capitalize(status)}
+    {capitalizeFirstLetter(status)}
   </Badge>
 }
 
-function capitalize(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
