@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans", });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
