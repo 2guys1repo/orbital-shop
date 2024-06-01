@@ -6,18 +6,20 @@ import StatusBadge from "./StatusBadge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { FaReceipt } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
+import { UserRole } from "@/lib/types"
+import { OrderStatus } from "@prisma/client"
 
 type OrderType = {
   id: number,
   orderDate: string,
-  orderStatus: string,
+  orderStatus: OrderStatus,
   buyerName?: string,
   sellerName?: string,
 }
 
 // Displays all purchases/sales of a user base on the role
-export default async function OrdersTable({ orders, role }: { orders: OrderType[], role: string }) {
-  const isSeller = role === "Seller";
+export default async function OrdersTable({ orders, role }: { orders: OrderType[], role: UserRole }) {
+  const isSeller = role == UserRole.SELLER;
   return (
     <div className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
       <Card>
