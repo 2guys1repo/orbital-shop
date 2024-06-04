@@ -37,25 +37,11 @@ export async function POST(req: Request) {
         // other events that we don't handle
         break;
     }
-
   } catch (err) {
     if (err instanceof Error) {
-      if (process.env.NODE_ENV == "production") {
-        // only production server will return the response
-        return NextResponse.json({ message: err.message }, { status: 400 });
-      }
       console.log(err.message)
+      return NextResponse.json({ message: err.message }, { status: 400 });
     }
   }
-  if (process.env.NODE_ENV !== "production") return;
-  const localUrl = "https://relative-goblin-totally.ngrok-free.app/api/kinde-webhook"
-  const newReq = new Request(localUrl, {
-    method: req.method,
-    headers: req.headers,
-    body: req.body,
-    //@ts-expect-error
-    duplex: "half",
-  })
-  fetch(newReq) // forwards req to local server
   return NextResponse.json({ status: 200, statusText: "success" }); // only prod returns response
 }
