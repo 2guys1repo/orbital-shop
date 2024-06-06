@@ -4,24 +4,31 @@ import prisma from "@/lib/db"
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import Stripe from "stripe"
 import { getProductName } from "./product";
+import { getUserNamesByIds } from "./user";
+import { getAuthorizedMiddleman } from "./auth";
+import { OrderStatus } from "@prisma/client";
+
 // create an order 
 export async function createOrder(charge: Stripe.Charge) {
   const { buyerId, sellerId, middlemanId, productId } = charge.metadata;
-
-  const order = await prisma.order.create({
-    data: {
-      buyerId,
-      sellerId,
-      middlemanId,
-      totalAmount: charge.amount, // TODO currently assumes one item
-      orderItems: {
-        create: {
-          priceSold: charge.amount,
-          productId: parseInt(productId)
+  try {
+    const order = await prisma.order.create({
+      data: {
+        buyerId,
+        sellerId,
+        middlemanId,
+        totalAmount: charge.amount, // TODO currently assumes one item
+        orderItems: {
+          create: {
+            priceSold: charge.amount,
+            productId: parseInt(productId)
+          }
         }
       }
-    }
-  })
+    })
+  } catch (error) {
+    console.log("A req was made by a dev, or an error occured while creating an order")
+  }
   // console.log(order)
 }
 
@@ -106,4 +113,37 @@ export async function getOrderDetailsById(id: number, role: string) {
     orderItems,
   }
   return transformedOrder;
+}
+
+// Returns all orders in the db associated to the middleman
+export async function getMiddlemanOrders(userId: string) {
+  // create if absent
+  const mmDetails = await prisma.middlemanDetails.upsert({
+    where: { userId },
+    update: {},
+    create: { userId },
+    include: { orders: true },
+  })
+  const transformedOrders = await Promise.all(mmDetails.orders.map(async (order) => {
+    const users = await getUserNamesByIds([order.buyerId, order.sellerId])
+    return {
+      id: order.id,
+      buyerName: users.find(u => u.kindeId == order.buyerId)?.name,
+      sellerName: users.find(u => u.kindeId == order.sellerId)?.name,
+      date: order.orderDate.toLocaleDateString(),
+      status: order.status,
+    }
+  }))
+  return transformedOrders
+}
+
+export async function updateOrderStatus(id: number, nextStatus: OrderStatus) {
+  const user = await getAuthorizedMiddleman();
+  if (!user) throw new Error("An error occured, unable to update order status")
+  await prisma.order.update({
+    where: { id },
+    data: {
+      status: nextStatus
+    }
+  })
 }

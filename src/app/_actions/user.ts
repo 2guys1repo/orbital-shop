@@ -2,6 +2,7 @@
 
 // File contains actions to interact with User model on the database
 import prisma from "@/lib/db";
+import { UserRole } from "@/lib/types";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 // Gets a single db user by kinde id
@@ -61,3 +62,30 @@ export async function createUser(kindeUser: KindeUserResponse) {
   return user;
 }
 
+// return the names of users within the id array
+export async function getUserNamesByIds(ids: string[]) {
+  const users = await prisma.user.findMany({
+    where: {
+      kindeId: { in: ids }
+    },
+    select: {
+      kindeId: true,
+      name: true,
+    }
+  })
+  return users;
+}
+
+export async function getAllUsers() {
+  return await prisma.user.findMany();
+}
+
+export async function updateDbUserRole(id: string, nextRole: UserRole) {
+  if (nextRole == UserRole.BUYER || nextRole == UserRole.SELLER) throw new Error("Invalid user role");
+  const user = await prisma.user.update({
+    where: { kindeId: id },
+    data: {
+      role: nextRole,
+    }
+  })
+}

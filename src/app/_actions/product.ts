@@ -2,39 +2,30 @@
 
 // File contains actions to interact with Product model on the database
 import { z } from "zod";
-import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUser } from "./auth";
-
-// Schema describing an image file
-const imageSchema = z.instanceof(File, {
-  message: "Required",
-}).refine(file => file.size === 0 || file.type.startsWith("image/"))
+import { UTApi } from "uploadthing/server";
 
 // Schema describing a post form
 const postSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
+  title: z.string().min(5),
+  description: z.string().min(5),
   price: z.coerce.number().min(1),
-  image: imageSchema.refine(file => file.size > 0, "Required"),
+  imageKey: z.string().min(1),
 })
 
 // Creates a new product in the database
-export async function addProduct(formData: FormData) {
+export async function addProduct(_prevState: unknown, formData: FormData) {
   const kindeUser = await getAuthenticatedUser();
   if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
   }
-
   const data = result.data;
-  await fs.mkdir("public/products", { recursive: true });
-  const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-  await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
-
+  const imagePath = `https://utfs.io/f/${data.imageKey}`  //path built from Uploadthing service
   await prisma.product.create({
     data: {
       title: data.title,
@@ -50,14 +41,14 @@ export async function addProduct(formData: FormData) {
 
 // Schema for an edit post form
 const updateSchema = postSchema.extend({
-  image: imageSchema.optional(),
+  imageKey: z.string().optional(),
+  prevPath: z.string().optional(),
 })
 
 // Updates existing product in the database
-export async function updateProduct(id: number, formData: FormData) {
+export async function updateProduct(id: number, _prevState: unknown, formData: FormData) {
   const kindeUser = await getAuthenticatedUser();
   if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
-
   const result = updateSchema.safeParse(Object.fromEntries(formData.entries()))
   if (result.success === false) {
     return result.error.formErrors.fieldErrors
@@ -69,13 +60,11 @@ export async function updateProduct(id: number, formData: FormData) {
   if (product.sellerId != kindeUser.id) throw new Error("Unauthorised");
 
   let imagePath = product.imagePath;
-  if (data.image != undefined && data.image.size > 0) {
-    await fs.unlink(`public${product.imagePath}`) // removes existing image
-    await fs.mkdir("public/products", { recursive: true });
-    imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-    await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
+  const utapi = new UTApi();
+  if (data.prevPath && data.imageKey) { // delete prevpath
+    await utapi.deleteFiles(data.prevPath)
+    imagePath = `https://utfs.io/f/${data.imageKey}`  // new image path
   }
-
   await prisma.product.update({
     where: { id },
     data: {
@@ -95,8 +84,10 @@ export async function deleteProduct(id: number) {
     where: { id }
   })
   if (!product) return notFound();
-
-  await fs.unlink(`public${product.imagePath}`)
+  const url = product.imagePath
+  const imgKey = url.substring(url.lastIndexOf("/") + 1);
+  const utapi = new UTApi()
+  await utapi.deleteFiles(imgKey);
   revalidatePath("/")
   redirect("/")
 }

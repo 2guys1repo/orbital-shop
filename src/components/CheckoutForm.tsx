@@ -21,7 +21,7 @@ function Form() {
     if (!stripe || !elements) return;
     stripe.confirmPayment({
       elements, confirmParams: {
-        return_url: "http://localhost:3000/buy/success" // TODO can use env
+        return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/buy/success` // either dev or prod url
       }
     })
   }

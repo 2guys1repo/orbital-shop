@@ -1,4 +1,9 @@
 import type { Config } from "tailwindcss"
+<<<<<<< HEAD
+=======
+import { fontFamily } from "tailwindcss/defaultTheme"
+import { withUt } from "uploadthing/tw";
+>>>>>>> a8969c1e659542321e0c5fb5f39910e544cefe54
 
 const config = {
   darkMode: ["class"],
@@ -7,7 +12,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -77,4 +82,4 @@ const config = {
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
-export default config
+export default withUt(config);

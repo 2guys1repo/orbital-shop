@@ -37,12 +37,11 @@ export async function POST(req: Request) {
         // other events that we don't handle
         break;
     }
-
   } catch (err) {
     if (err instanceof Error) {
-      console.error(err.message);
+      console.log(err.message)
       return NextResponse.json({ message: err.message }, { status: 400 });
     }
   }
-  return NextResponse.json({ status: 200, statusText: "success" });
+  return NextResponse.json({ status: 200, statusText: "success" }); // only prod returns response
 }
