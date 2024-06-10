@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button"
 import { addProduct, updateProduct } from "@/app/_actions/product"
 import { ProductType } from "@/lib/types"
 import DeleteProductBtn from "./DeleteProductBtn"
-import Utform from "./Utform"
 import { useFormState, useFormStatus } from "react-dom"
+import UploadDropzone from "./UploadDropzone"
 
 type ProductFormProps = {
   product?: ProductType,
@@ -20,8 +20,8 @@ export default function ProductForm({ product }: ProductFormProps) {
   const formAction = product == undefined ? addProduct : updateProduct.bind(null, product.id)
   const [error, action] = useFormState(formAction, {})
   return (
-    <form action={action} >
-      <Card className="max-w-md mx-auto">
+    <form action={action}>
+      <Card className="min-w-max w-1/2 mx-auto" >
         <CardHeader>
           {product == undefined ? // Conditionally renders for listing new product or editing existing one
             <>
@@ -65,9 +65,7 @@ export default function ProductForm({ product }: ProductFormProps) {
             </div>
           </div>
           <div>
-            {/* Uploadthing form field */}
-            <Utform existingPath={product?.imagePath} />
-            {error?.imageKey && <div className="text-destructive">Remember to upload image</div>}
+            <UploadDropzone />
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4" >
@@ -75,7 +73,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           <SubmitButton />
         </CardFooter>
       </Card>
-    </form>
+    </form >
   )
 }
 
