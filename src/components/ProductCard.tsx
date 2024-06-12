@@ -1,41 +1,39 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { CardTitle, CardDescription, CardHeader, CardContent, Card, CardFooter } from "@/components/ui/card"
 import Image from "next/image";
+import { ProductType } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 // Fields of a product
-type ProductCardProps = {
-  title: string,
-  description: string,
-  price: number,
-  imagePath: string,
-  id: number,
+interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  product: ProductType,
+  width?: number,
+  height?: number
 }
 
 // Renders a card for individual products
-export default function ProductCard({ title, description, price, imagePath, id: post_id }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  className,
+  width = 200,
+  height = 200,
+  ...props
+}: ProductCardProps) {
   return (
-    <Card className="w-full max-w-sm">
-      <Image
-        alt="Product image"
-        className="aspect-square object-cover rounded-lg overflow-hidden"
-        height="400"
-        src={imagePath}
-        width="400"
-      />
-      <CardHeader >
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent >
-        <p className="text-2xl">${price}</p>
-      </CardContent>
-      <CardFooter>
-        <Button asChild size="lg" className="w-full">
-          <Link href={`/products/${post_id}`}>Buy now</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+    <div className={cn("flex flex-col gap-1", className)} {...props}>
+      <Link href={`/products/${product.id}`}>
+        <Image
+          src={product.imagePath}
+          alt={product.title}
+          width={width}
+          height={height}
+          className="object-cover transition-all hover:scale-105 aspect-square overflow-hidden rounded-lg"
+        />
+      </Link>
+      <div className="mt-1">
+        <p className="text-zinc-600">{product.title}</p>
+        <h3 className="font-semibold">${product.price}</h3>
+      </div>
+    </div>
   )
 }
 
