@@ -1,14 +1,16 @@
 import { getProductsOfUser } from "@/app/_actions/product"
 import { getUserByDbId } from "@/app/_actions/user"
-import ProductCard from "@/components/ProductCard"
-import SearchBar from "@/components/SearchBar"
+import Listings from "@/components/Listings"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { EllipsisVertical, Filter, User } from "lucide-react"
+import { EllipsisVertical, User } from "lucide-react"
 import { notFound } from "next/navigation"
 
+type UserProfileProps = {
+  params: { id: string },
+}
+
 // Page to show all listings of a user
-export default async function UserProfile({ params }: { params: { id: string } }) {
+export default async function UserProfile({ params }: UserProfileProps) {
   const dbUser = await getUserByDbId(parseInt(params.id))
   if (!dbUser) return notFound();
   const products = await getProductsOfUser(dbUser.kindeId)
@@ -16,9 +18,9 @@ export default async function UserProfile({ params }: { params: { id: string } }
     <div>
       <header className="bg-gradient-to-r from-slate-300 to-slate-500 py-8 h-32">
       </header>
-      <main className="flex justify-between ">
+      <main className="flex gap-48">
         <Profile />
-        <div>
+        <div className="flex-grow min-h-[32rem]">
           <div className="flex justify-between my-2">
             <div className="flex gap-4">
               <Button variant="ghost">Listings</Button>
@@ -31,37 +33,11 @@ export default async function UserProfile({ params }: { params: { id: string } }
               </Button>
             </div>
           </div>
-          <Listings />
+          <Listings products={products} />
         </div>
       </main>
     </div>
   )
-
-  function Listings() {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row justify-between" >
-          <CardTitle>Listings</CardTitle>
-          <div className="flex gap-4">
-            <SearchBar />
-            <Button variant="ghost" size="icon">
-              <Filter strokeWidth={2} className="text-zinc-500" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="grid grid-cols-4 gap-8">
-          {products.map(product => (
-            <>
-              <ProductCard key={product.id} product={product} />
-              <ProductCard key={product.id + 10} product={product} />
-              <ProductCard key={product.id + 20} product={product} />
-              <ProductCard key={product.id + 30} product={product} />
-            </>
-          ))}
-        </CardContent>
-      </Card>
-    )
-  }
 
   function Profile() {
     return (
