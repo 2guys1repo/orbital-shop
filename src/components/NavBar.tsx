@@ -7,6 +7,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { getDbUser } from "@/app/_actions/user";
 import { getAuthorizedMiddleman } from "@/app/_actions/auth";
 import { UserRole } from "@prisma/client";
+import { Search } from "lucide-react";
+import { Input } from "./ui/input";
 
 // TODO can fix css 
 export default async function NavBar() {
@@ -17,6 +19,15 @@ export default async function NavBar() {
     <>
       <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
         <NavSheet />
+        {/* Search bar */}
+        <div className="relative w-1/2 mr-auto flex gap-4 items-center ">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            className="pl-8 focus-visible:ring-transparent rounded-xl border-gray-800 border-2"
+            placeholder="Search for anything..."
+          />
+          <Button size="sm">Search</Button>
+        </div>
         <nav className="ml-auto hidden lg:flex gap-6">
           {user?.role == UserRole.ADMIN &&
             <Link
@@ -64,7 +75,7 @@ export default async function NavBar() {
           </Link>
         </nav>
       </header>
-      <div className="text-destructive text-center">App is hosted on free server, button clicks are slow but will load in 3s if they are meant to load.</div>
+      {/* <div className="text-destructive text-center">App is hosted on free server, button clicks are slow but will load in 3s if they are meant to load.</div> */}
     </>
   )
 }
