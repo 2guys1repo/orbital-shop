@@ -125,11 +125,11 @@ export async function getMiddlemanOrders(userId: string) {
     include: { orders: true },
   })
   const transformedOrders = await Promise.all(mmDetails.orders.map(async (order) => {
-    const users = await getUserNamesByIds([order.buyerId, order.sellerId])
+    const userDict = await getUserNamesByIds([order.buyerId, order.sellerId])
     return {
       id: order.id,
-      buyerName: users.find(u => u.kindeId == order.buyerId)?.name,
-      sellerName: users.find(u => u.kindeId == order.sellerId)?.name,
+      buyerName: userDict[order.buyerId],
+      sellerName: userDict[order.sellerId],
       date: order.orderDate.toLocaleDateString(),
       status: order.status,
     }

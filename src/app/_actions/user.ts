@@ -62,8 +62,20 @@ export async function createUser(kindeUser: KindeUserResponse) {
   return user;
 }
 
-// return the names of users within the id array
-export async function getUserNamesByIds(ids: string[]) {
+/**
+ * A dictionary where keys are Kinde user IDs and values are user names.
+ */
+export type UserDict = {
+  [kindeId: string]: string
+}
+
+/**
+ * Find the names of all users from an input array of Kinde id
+ * 
+ * @param ids Array of Kinde user ids.
+ * @returns A Promise that resolves to an object with keys of Kinde IDs and values of their names. 
+ */
+export async function getUserNamesByIds(ids: string[]): Promise<UserDict> {
   const users = await prisma.user.findMany({
     where: {
       kindeId: { in: ids }
@@ -72,8 +84,12 @@ export async function getUserNamesByIds(ids: string[]) {
       kindeId: true,
       name: true,
     }
-  })
-  return users;
+  });
+  const userDict: UserDict = {}
+  for (const { kindeId, name } of users) {
+    userDict[kindeId] = name;
+  }
+  return userDict;
 }
 
 export async function getAllUsers() {
