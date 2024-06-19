@@ -7,8 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { getDbUser } from "@/app/_actions/user";
 import { getAuthorizedMiddleman } from "@/app/_actions/auth";
 import { UserRole } from "@prisma/client";
-import { Search } from "lucide-react";
-import { Input } from "./ui/input";
+import SearchBar from "./SearchBar";
 
 // TODO can fix css 
 export default async function NavBar() {
@@ -17,17 +16,10 @@ export default async function NavBar() {
   const user = (kindeUser ? await getDbUser(kindeUser) : null); // Checks whether user is logged in
   return (
     <>
-      <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
+      <header className="flex h-20 w-full items-center px-4 md:px-6">
         <NavSheet />
         {/* Search bar */}
-        <div className="relative w-1/2 mr-auto flex gap-4 items-center ">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            className="pl-8 focus-visible:ring-transparent rounded-xl border-gray-800 border-2"
-            placeholder="Search for anything..."
-          />
-          <Button size="sm">Search</Button>
-        </div>
+        <SearchBar />
         <nav className="ml-auto hidden lg:flex gap-6">
           {user?.role == UserRole.ADMIN &&
             <Link
@@ -118,10 +110,10 @@ async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number 
 function NavSheet() {
   //TODO fix link
   return (
-    <>
+    <div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button className="lg:hidden" size="icon" variant="outline">
+          <Button className="lg:hidden mr-2" size="icon" variant="outline">
             <MenuIcon className="h-6 w-6" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
@@ -151,7 +143,7 @@ function NavSheet() {
         <MountainIcon className="h-6 w-6" />
         <span className="sr-only">Orbital Shop</span>
       </Link>
-    </>
+    </div>
   )
 }
 

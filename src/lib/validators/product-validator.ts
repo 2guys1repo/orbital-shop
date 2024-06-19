@@ -19,5 +19,15 @@ export const ProductFilterSchema = z.object({
   // category: z.array(z.enum(AVAILABLE_CATEGORIES)) // TODO can add category in future
 })
 
-
 export type ProductFilterType = z.infer<typeof ProductFilterSchema>;
+
+
+// FOR SEARCH (might use this to replace the above validator)
+export const SORT_OPTS = ["best-match", "date-asc", "price-asc", "price-desc"] as const;
+export const SearchFilterSchema = z.object({
+  sortBy: z.enum(SORT_OPTS),
+  priceRange: PriceRangeSchema
+  // category: z.array(z.enum(AVAILABLE_CATEGORIES)) // TODO can add category in future
+})
+
+export type SearchFilterType = z.infer<typeof SearchFilterSchema>;

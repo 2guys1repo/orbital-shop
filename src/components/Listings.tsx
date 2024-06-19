@@ -1,6 +1,6 @@
 "use client"
 
-import ProductCard from "@/components/ProductCard"
+import { ProductCardComponent } from "@/components/ProductCard"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "./ui/button"
 import { Filter, Search } from "lucide-react"
@@ -27,7 +27,8 @@ const DATE_FILTERS = [
   { name: "Oldest first", value: "date-desc" },
 ] as const
 
-// The component displaying the listings
+// TODO please refactor
+// The component displaying the listings for a user
 export default function Listings({ products }: { products: ProductType[] }) {
   const [searchProducts, setSearchProducts] = useState<ProductType[]>(products);
   const [filteredProducts, setFilteredProducts] = useState<ProductType[]>(searchProducts);
@@ -36,6 +37,7 @@ export default function Listings({ products }: { products: ProductType[] }) {
     distance: 50,
     threshold: 0.5,
   })
+  // handler for the search bar in user profile
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
     if (value.length == 0) {
@@ -65,9 +67,9 @@ export default function Listings({ products }: { products: ProductType[] }) {
           <ProductFilter />
         </div>
       </CardHeader>
-      <CardContent className="grid grid-cols-4 gap-8">
+      <CardContent className="grid grid-cols-4 gap-4 ">
         {filteredProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCardComponent key={product.id} product={product} imgProp="h-56" />
         ))}
       </CardContent>
     </Card>
@@ -78,6 +80,7 @@ export default function Listings({ products }: { products: ProductType[] }) {
       minPrice: 0,
       maxPrice: 999,
     }
+    // diff filters that can be applied
     const [filters, setFilters] = useState<ProductFilterType>({
       priceSort: "none",
       dateSort: "none",
@@ -103,6 +106,7 @@ export default function Listings({ products }: { products: ProductType[] }) {
         }
       }))
     }
+    // handler applying price range filter
     function handleApply() {
       const result = ProductFilterSchema.safeParse(filters);
       if (!result.success) {
@@ -177,7 +181,6 @@ export default function Listings({ products }: { products: ProductType[] }) {
               />
             </div>
           </div>
-          {/* <Separator className="my-2" /> */}
           <div className="flex justify-end mt-4">
             <Button variant="default" size="sm" onClick={handleApply}>
               Apply
