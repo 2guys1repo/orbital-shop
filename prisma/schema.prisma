@@ -14,8 +14,7 @@ datasource db {
 model User {
   id               Int               @id @default(autoincrement())
   kindeId          String            @unique
-  username         String? // TODO sign in with email will not give username
-  // username         String            @unique
+  username         String            @unique // will be randomly generated
   email            String            @unique
   name             String
   role             UserRole          @default(BASIC)
