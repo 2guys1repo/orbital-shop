@@ -38,7 +38,7 @@ export default async function NavBar() {
           {user ? // Conditionally renders based on whether user is logged in
             <>
               {/* User is logged in */}
-              <UserProfileDropdown name={user.name} dbId={user.id} />
+              <UserProfileDropdown name={user.name} username={user.username} />
               <LogoutLink
                 className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
               >
@@ -73,7 +73,7 @@ export default async function NavBar() {
 }
 
 // Returns a Dropdown menu
-async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
+async function UserProfileDropdown({ name, username }: { name: string, username: string }) {
   const middleman = await getAuthorizedMiddleman();
   return (
     <DropdownMenu>
@@ -84,7 +84,7 @@ async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number 
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/users/${dbId}`} className="cursor-pointer"> Profile </Link>
+          <Link href={`/users/${username}`} className="cursor-pointer"> Profile </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild >
           <Link href="/manage-listing" className="cursor-pointer">Manage Listings </Link>

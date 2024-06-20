@@ -11,22 +11,29 @@ interface ProductCardComponentProps extends React.HTMLAttributes<HTMLDivElement>
 }
 
 interface ProductCardProps extends ProductCardComponentProps {
-  sellerName: string,
-  sellerImgPath?: string
+  sellerDetails: {
+    name: string,
+    username: string,
+    userImgPath?: string, // TODO 
+  }
 }
 
 // Renders a card for individual products
-export default function ProductCard({ product, sellerName, sellerImgPath = "", }: ProductCardProps) {
+export default function ProductCard({ product, sellerDetails }: ProductCardProps) {
+  const { name, username, userImgPath = "" } = sellerDetails;
   return (
     <div className="flex flex-col px-4 hover:shadow-2xl">
       {/* Top row with seller info */}
       <div className="flex gap-2 items-center mt-1 mb-2">
         <Avatar>
-          <AvatarImage src={sellerImgPath} />
-          <AvatarFallback>{sellerName[0]}</AvatarFallback>
+          <AvatarImage src={userImgPath} />
+          <AvatarFallback>{name[0]}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <p className="text-sm font-semibold">{sellerName}</p>
+          <Link href={`/users/${username}`}>
+            <p className="text-sm font-semibold">{name}</p>
+          </Link>
+          {/* TODO display accurate date */}
           <p className="text-sm text-muted-foreground">{Math.floor(Math.random() * 10) + 2} days ago</p>
         </div>
       </div>

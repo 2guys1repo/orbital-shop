@@ -14,11 +14,11 @@ export async function getUserByKindeId(kindeId: string) {
   })
 }
 
-// gets a single db user by its db id
-export async function getUserByDbId(dbId: number) {
+// gets a single db user by its username
+export async function getUserByUsername(username: string) {
   return await prisma.user.findUnique({
     where: {
-      id: dbId
+      username: username
     }
   })
 }
@@ -76,14 +76,17 @@ async function createUsername(name: string) {
  * A dictionary where keys are Kinde user IDs and values are user names.
  */
 export type UserDict = {
-  [kindeId: string]: string
+  [kindeId: string]: {
+    name: string,
+    username: string,
+  }
 }
 
 /**
  * Find the names of all users from an input array of Kinde id
  * 
  * @param ids Array of Kinde user ids.
- * @returns A Promise that resolves to an object with keys of Kinde IDs and values of their names. 
+ * @returns A Promise that resolves to an object with keys of Kinde IDs and value is a mapping of name and username
  */
 export async function getUserNamesByIds(ids: string[]): Promise<UserDict> {
   const users = await prisma.user.findMany({
@@ -93,11 +96,15 @@ export async function getUserNamesByIds(ids: string[]): Promise<UserDict> {
     select: {
       kindeId: true,
       name: true,
+      username: true,
     }
   });
   const userDict: UserDict = {}
-  for (const { kindeId, name } of users) {
-    userDict[kindeId] = name;
+  for (const { kindeId, name, username } of users) {
+    userDict[kindeId] = {
+      name,
+      username,
+    };
   }
   return userDict;
 }
