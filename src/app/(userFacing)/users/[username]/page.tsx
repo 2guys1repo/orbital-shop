@@ -1,17 +1,17 @@
 import { getProductsOfUser } from "@/app/_actions/product"
-import { getUserByDbId } from "@/app/_actions/user"
+import { getUserByUsername } from "@/app/_actions/user"
 import Listings from "@/components/Listings"
 import { Button } from "@/components/ui/button"
 import { EllipsisVertical, User } from "lucide-react"
 import { notFound } from "next/navigation"
 
 type UserProfileProps = {
-  params: { id: string },
+  params: { username: string },
 }
 
 // Page to show all listings of a user
 export default async function UserProfile({ params }: UserProfileProps) {
-  const dbUser = await getUserByDbId(parseInt(params.id))
+  const dbUser = await getUserByUsername(params.username)
   if (!dbUser) return notFound();
   const products = await getProductsOfUser(dbUser.kindeId)
   return (

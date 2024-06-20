@@ -128,8 +128,8 @@ export async function getMiddlemanOrders(userId: string) {
     const userDict = await getUserNamesByIds([order.buyerId, order.sellerId])
     return {
       id: order.id,
-      buyerName: userDict[order.buyerId],
-      sellerName: userDict[order.sellerId],
+      buyerName: userDict[order.buyerId]["name"],
+      sellerName: userDict[order.sellerId]["name"],
       date: order.orderDate.toLocaleDateString(),
       status: order.status,
     }

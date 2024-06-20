@@ -39,7 +39,7 @@ async function ProductCarousel() {
   // const products = temp // mock data
   const products = await getAllProducts() // TODO can get by likes/reviews
   const sellerIds = products.map(product => product.sellerId)
-  const sellerNameDict = await getUserNamesByIds(sellerIds) // key is user id, val is name
+  const sellerDetailsDict = await getUserNamesByIds(sellerIds) // key is user id, val is name
   return (
     <Carousel
       className="w-full"
@@ -52,7 +52,7 @@ async function ProductCarousel() {
         {products.map(product => (
           <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-1 ">
             {/* TODO add seller img path */}
-            <ProductCard key={product.id} product={product} sellerName={sellerNameDict[product.sellerId]} sellerImgPath="" />
+            <ProductCard key={product.id} product={product} sellerDetails={sellerDetailsDict[product.sellerId]} />
           </CarouselItem>
         ))}
       </CarouselContent>

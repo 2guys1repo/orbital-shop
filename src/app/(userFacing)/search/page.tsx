@@ -23,7 +23,7 @@ export default async function SearchPage({
   // const products = [...temp, ...temp, ...temp] // mock data
   const products = await getFilteredProducts(searchParams);
   const sellerIds = products.map(product => product.sellerId)
-  const sellerNameDict = await getUserNamesByIds(sellerIds) // key is user id, val is name
+  const sellerDetailsDict = await getUserNamesByIds(sellerIds) // key is user id, val is name
   return (
     <div>
       {/* Header content */}
@@ -36,7 +36,7 @@ export default async function SearchPage({
         <CardContent>
           <div className="grid grid-cols-4 gap-10">
             {products.map(product => (
-              <ProductCard key={product.id} product={product} sellerName={sellerNameDict[product.sellerId]} />
+              <ProductCard key={product.id} product={product} sellerDetails={sellerDetailsDict[product.sellerId]} />
             ))}
           </div>
         </CardContent>
