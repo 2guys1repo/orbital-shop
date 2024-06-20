@@ -33,26 +33,17 @@ export async function getDbUser(kindeUser: KindeUser) {
 
 interface KindeUserResponse {
   id: string
-  username: string
   email: string
   first_name: string
-}
-
-function isValidUserResponse(kindeUser: KindeUserResponse): boolean {
-  for (const key in kindeUser) {
-    if (kindeUser[key as keyof KindeUserResponse] === undefined) {
-      return false;
-    }
-  }
-  return true;
+  last_name: string
 }
 
 export async function createUser(kindeUser: KindeUserResponse) {
-  if (!isValidUserResponse(kindeUser)) throw new Error("User data is incomplete");
+  let username = await createUsername(kindeUser.first_name + kindeUser.last_name);
   const user = await prisma.user.create({
     data: {
       kindeId: kindeUser.id,
-      username: kindeUser.username,
+      username: username,
       name: kindeUser.first_name!,
       email: kindeUser.email!,
       sellerDetails: { create: {} },
@@ -60,6 +51,25 @@ export async function createUser(kindeUser: KindeUserResponse) {
     }
   })
   return user;
+}
+
+/**
+ * Generates a username from the given name
+ * @param name The full name of the user
+ * @returns a username built from the given name
+ */
+async function createUsername(name: string) {
+  let parsedName = name.replace(/[^a-zA-Z0-9]/g, '');
+  let username = parsedName;
+  let existingUser = await prisma.user.findUnique({ where: { username, } })
+  while (existingUser !== null) { // user with the username exists
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array)
+    username = parsedName + array[0]
+    existingUser = await prisma.user.findUnique({ where: { username, } })
+  }
+
+  return username
 }
 
 /**
