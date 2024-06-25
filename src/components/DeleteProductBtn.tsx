@@ -5,11 +5,11 @@ import { Button } from "./ui/button"
 import { deleteProduct } from "@/app/_actions/product"
 
 // A button to delete product listing in the db
-export default function DeleteProductBtn({ product_id, children }: { product_id: number, children?: React.ReactNode }) {
+export default function DeleteProductBtn({ product_id, children, ghost }: { product_id: number, children?: React.ReactNode, ghost?: boolean }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" >
+        <Button variant={ghost ? "ghost" : "destructive"} >
           {children || "Delete"}
         </Button>
       </AlertDialogTrigger>
