@@ -99,6 +99,7 @@ export async function deleteProduct(id: number) {
   redirect("/")
 }
 
+
 // Fetches all the products from db
 export async function getAllProducts() {
   return await prisma.product.findMany()
