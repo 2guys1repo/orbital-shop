@@ -11,10 +11,8 @@ export default function HomePage() {
       {/* Header banner section */}
       <header className="bg-red-50 rounded-md h-60 relative -mt-1">
         <div className="flex flex-col p-6 h-full justify-center gap-6 ">
-          <h1 className=" text-3xl md:text-4xl font-semibold tracking-tight">Shop with Confidence: Quality-Assured Products</h1>
-          <p className="text-gray-500 text-lg md:text-xl">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. In dolores, praesentium ipsa voluptatibus earum non.
-          </p>
+          <h1 className=" text-3xl md:text-4xl font-semibold tracking-tight">Shop with Trust: Genuine Products Only</h1>
+          <p className="text-gray-500 text-md md:text-lg">Discover and purchase from a curated selection of verified, high-quality goods. Our commitment to authenticity ensures you get exactly what you pay for. Shop confidently with our trusted sellers and enjoy peace of mind with every transaction.</p>
           <div className="flex gap-2 ">
             <Button size="lg">Shop Now</Button>
             <Button size="lg" variant="outline">
