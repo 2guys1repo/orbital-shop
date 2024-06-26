@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import jwksClient from "jwks-rsa";
-import jwt, { Jwt } from "jsonwebtoken";
 import { createUser } from "@/app/_actions/user";
+import jwt, { Jwt } from "jsonwebtoken";
+import jwksClient from "jwks-rsa";
+import { NextResponse } from "next/server";
 
 // This will fetch the public JSON web keys file
 const client = jwksClient({

@@ -1,12 +1,16 @@
 "use server"
 
 // File contains actions to interact with Product model on the database
-import { z } from "zod";
-import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
+import { ProductType } from "@/lib/types";
+import { Prisma } from "@prisma/client";
+import Fuse from "fuse.js";
 import { revalidatePath } from "next/cache";
-import { getAuthenticatedUser } from "./auth";
+import { notFound, redirect } from "next/navigation";
 import { UTApi } from "uploadthing/server";
+import { z } from "zod";
+import { SearchParamsType } from "../(userFacing)/search/page";
+import { getAuthenticatedUser } from "./auth";
 
 // Schema describing a post form
 const postSchema = z.object({
@@ -123,4 +127,51 @@ export async function getProductName(id: number) {
     where: { id },
     select: { title: true }
   })
+}
+
+/**
+ * Finds a list of products matching the query. 
+ * 
+ * @param query The query string used to search for products. 
+ * @param searchFilters The filters to apply to the results
+ * @returns A promise that resolves to an array containing products matching the query string.
+ */
+export async function getFilteredProducts(searchParams: SearchParamsType): Promise<ProductType[]> {
+  const { query, sortBy, priceRange } = searchParams
+  const orderBy: Prisma.ProductOrderByWithRelationInput[] = []
+  let [minPrice, maxPrice] = [0, 999]
+  if (priceRange) {
+    const [minPriceStr, maxPriceStr] = priceRange.split("-")
+    minPrice = parseFloat(minPriceStr)
+    maxPrice = parseFloat(maxPriceStr)
+  }
+  if (sortBy) {
+    const [field, order] = sortBy.split('-');
+    if (field === "price" && (order == "asc" || order == "desc")) {
+      orderBy.push({ price: order })
+    } else if (field === "date") {
+      // TODO Sort by date
+      // orderBy.push({createdAt: order})
+    }
+  }
+  const products = await prisma.product.findMany({
+    where: {
+      price: {
+        gte: minPrice,
+        lte: maxPrice
+      }
+    },
+    orderBy: orderBy.length > 0 ? orderBy : undefined
+  })
+  const fuse = new Fuse(products, {
+    keys: ["title", "description"],
+    distance: 50,
+    shouldSort: sortBy === "best-match" // only sort if order by best match else prisma handles sort
+  })
+  if (query) {
+    const fuseResults = fuse.search(query)
+    const results = fuseResults.map(res => res.item);
+    return results
+  }
+  return products
 }

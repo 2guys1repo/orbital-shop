@@ -5,7 +5,7 @@ export type ProductType = {
   price: number; // TODO float??
   imagePath: string;
   sellerId: string;
-  quantity: number;
+  createdAt: Date;
 }
 
 export type UserType = {

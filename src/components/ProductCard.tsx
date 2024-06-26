@@ -1,42 +1,73 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { CardTitle, CardDescription, CardHeader, CardContent, Card, CardFooter } from "@/components/ui/card"
 import Image from "next/image";
+import { ProductType } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 // Fields of a product
-type ProductCardProps = {
-  title: string,
-  description: string,
-  price: number,
-  imagePath: string,
-  id: number,
+interface ProductCardComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+  product: ProductType,
+  imgProp?: string,
+}
+
+interface ProductCardProps extends ProductCardComponentProps {
+  sellerDetails: {
+    name: string,
+    username: string,
+    userImgPath?: string, // TODO 
+  }
 }
 
 // Renders a card for individual products
-export default function ProductCard({ title, description, price, imagePath, id: post_id }: ProductCardProps) {
+export default function ProductCard({ product, sellerDetails }: ProductCardProps) {
+  const { name, username, userImgPath = "" } = sellerDetails;
   return (
-    <Card className="w-full max-w-sm">
-      <Image
-        alt="Product image"
-        className="aspect-square object-cover rounded-lg overflow-hidden"
-        height="400"
-        src={imagePath}
-        width="400"
-      />
-      <CardHeader >
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent >
-        <p className="text-2xl">${price}</p>
-      </CardContent>
-      <CardFooter>
-        <Button asChild size="lg" className="w-full">
-          <Link href={`/products/${post_id}`}>Buy now</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+    <div className="flex flex-col px-4 hover:shadow-2xl">
+      {/* Top row with seller info */}
+      <div className="flex gap-2 items-center mt-1 mb-2">
+        <Avatar>
+          <AvatarImage src={userImgPath} />
+          <AvatarFallback>{name[0]}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <Link href={`/users/${username}`}>
+            <p className="text-sm font-semibold">{name}</p>
+          </Link>
+          {/* TODO display accurate date */}
+          <p className="text-sm text-muted-foreground">{Math.floor(Math.random() * 10) + 2} days ago</p>
+        </div>
+      </div>
+      {/* Product info */}
+      <ProductCardComponent product={product} />
+    </div>
   )
 }
 
+// component containing image and title only, for more granular control
+export function ProductCardComponent({
+  product,
+  className,
+  imgProp,
+  ...props
+}: ProductCardComponentProps) {
+  return (
+    <div className={cn("flex flex-col gap-4 ", className)} {...props}>
+      <div className={cn("relative h-64", imgProp)}>
+        <Link href={`/products/${product.id}`} >
+          <Image
+            src={product.imagePath}
+            alt={product.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-all hover:scale-105 aspect-square rounded-lg"
+          />
+        </Link>
+      </div>
+      <div className="mt-1">
+        <h3 className="text-zinc-600 line-clamp-2">{product.title}</h3>
+        <h3 className="font-semibold">${product.price}</h3>
+      </div>
+    </div>
+  )
+}
 

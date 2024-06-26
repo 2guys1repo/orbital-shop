@@ -1,20 +1,17 @@
-import { Button } from "@/components/ui/button"
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
+import { getAuthenticatedUser } from "@/app/_actions/auth"
 import { getProductsOfUser } from "@/app/_actions/product"
 import DeleteProductBtn from "@/components/DeleteProductBtn"
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
-import ProductForm from "@/components/ProductForm"
-import { ProductType } from "@/lib/types"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { SquarePen, Trash2Icon } from "lucide-react"
 import Link from "next/link"
-import { getAuthenticatedUser } from "@/app/_actions/auth"
-import { FaPencilAlt } from "react-icons/fa";
 
 export default async function ListingsPage() {
   const kindeUser = await getAuthenticatedUser(); // Not logged in, not suppose to have access
   if (!kindeUser) throw Error("Unable to manage listing"); // kinde server problem
   const products = await getProductsOfUser(kindeUser.id);
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="w-4/5 mx-auto p-6 rounded-lg shadow">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-xl font-semibold">Manage Listings</h1>
         <Link href="/sell">
@@ -30,7 +27,7 @@ export default async function ListingsPage() {
             <TableHead>Product ID</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead className="w-[100px] text-right">Actions</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,8 +38,12 @@ export default async function ListingsPage() {
                 <TableCell>{product.title}</TableCell>
                 <TableCell>${product.price}</TableCell>
                 <TableCell className="flex justify-end items-center space-x-2">
-                  <EditDialog product={product} />
-                  <DeleteProductBtn product_id={product.id}><TrashIcon className="w-4 h-4" /></DeleteProductBtn>
+                  <Link href={`/sell/${product.id}`} >
+                    <SquarePen />
+                  </Link>
+                  <DeleteProductBtn product_id={product.id} ghost>
+                    <Trash2Icon color="red" />
+                  </DeleteProductBtn>
                 </TableCell>
               </TableRow>
             ))
@@ -50,29 +51,6 @@ export default async function ListingsPage() {
         </TableBody>
       </Table>
     </div>
-  )
-}
-
-// Returns the dialog with the editform
-function EditDialog({ product }: { product: ProductType }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="p-2" variant="ghost" size="icon">
-          <FaPencilAlt size={18} />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <ProductForm product={product} />
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   )
 }
 
@@ -93,27 +71,6 @@ function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
     >
       <path d="M5 12h14" />
       <path d="M12 5v14" />
-    </svg>
-  )
-}
-
-function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
     </svg>
   )
 }

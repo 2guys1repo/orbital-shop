@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { getDbUser } from "@/app/_actions/user";
 import { getAuthorizedMiddleman } from "@/app/_actions/auth";
 import { UserRole } from "@prisma/client";
+import SearchBar from "./SearchBar";
 
 // TODO can fix css 
 export default async function NavBar() {
@@ -15,8 +16,10 @@ export default async function NavBar() {
   const user = (kindeUser ? await getDbUser(kindeUser) : null); // Checks whether user is logged in
   return (
     <>
-      <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
+      <header className="flex h-20 w-full items-center px-4 md:px-6">
         <NavSheet />
+        {/* Search bar */}
+        <SearchBar />
         <nav className="ml-auto hidden lg:flex gap-6">
           {user?.role == UserRole.ADMIN &&
             <Link
@@ -35,7 +38,7 @@ export default async function NavBar() {
           {user ? // Conditionally renders based on whether user is logged in
             <>
               {/* User is logged in */}
-              <UserProfileDropdown name={user.name} dbId={user.id} />
+              <UserProfileDropdown name={user.name} username={user.username} />
               <LogoutLink
                 className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
               >
@@ -64,13 +67,13 @@ export default async function NavBar() {
           </Link>
         </nav>
       </header>
-      <div className="text-destructive text-center">App is hosted on free server, button clicks are slow but will load in 3s if they are meant to load.</div>
+      {/* <div className="text-destructive text-center">App is hosted on free server, button clicks are slow but will load in 3s if they are meant to load.</div> */}
     </>
   )
 }
 
 // Returns a Dropdown menu
-async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number }) {
+async function UserProfileDropdown({ name, username }: { name: string, username: string }) {
   const middleman = await getAuthorizedMiddleman();
   return (
     <DropdownMenu>
@@ -81,7 +84,7 @@ async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number 
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/users/${dbId}`} className="cursor-pointer"> Profile </Link>
+          <Link href={`/users/${username}`} className="cursor-pointer"> Profile </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild >
           <Link href="/manage-listing" className="cursor-pointer">Manage Listings </Link>
@@ -107,10 +110,10 @@ async function UserProfileDropdown({ name, dbId }: { name: string, dbId: number 
 function NavSheet() {
   //TODO fix link
   return (
-    <>
+    <div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button className="lg:hidden" size="icon" variant="outline">
+          <Button className="lg:hidden mr-2" size="icon" variant="outline">
             <MenuIcon className="h-6 w-6" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
@@ -140,7 +143,7 @@ function NavSheet() {
         <MountainIcon className="h-6 w-6" />
         <span className="sr-only">Orbital Shop</span>
       </Link>
-    </>
+    </div>
   )
 }
 
