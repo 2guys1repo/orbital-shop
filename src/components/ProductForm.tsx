@@ -65,6 +65,16 @@ export default function ProductForm({ product }: ProductFormProps) {
             </div>
           </div>
           <div>
+            <Label htmlFor="quantity">Quantity of your products you wish to sell</Label>
+            <div className="mt-1 flex">
+              {product == undefined ?
+                <Input className="block w-full flex-1 rounded-md" id="quantity" name="quantity" placeholder="1" type="number" min="1" required /> :
+                <Input className="block w-full flex-1 rounded-md" id="quantity" name="quantity" defaultValue={product.quantity} type="number" min="1" required />
+              }
+              {error?.quantity && <div className="text-destructive">{error.quantity}</div>}
+            </div>
+          </div>
+          <div>
             {/* Uploadthing form field */}
             <Utform existingPath={product?.imagePath} />
             {error?.imageKey && <div className="text-destructive">Remember to upload image</div>}

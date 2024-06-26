@@ -14,6 +14,7 @@ const postSchema = z.object({
   description: z.string().min(5),
   price: z.coerce.number().min(1),
   imageKey: z.string().min(1),
+  quantity: z.coerce.number().min(1),
 })
 
 // Creates a new product in the database
@@ -33,6 +34,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
       price: data.price,
       imagePath: imagePath,
       sellerId: kindeUser.id,
+      quantity: data.quantity,
     }
   })
   revalidatePath("/")
@@ -72,6 +74,7 @@ export async function updateProduct(id: number, _prevState: unknown, formData: F
       description: data.description,
       price: data.price,
       imagePath: imagePath,
+      quantity: data.quantity,
     }
   })
   revalidatePath("/")

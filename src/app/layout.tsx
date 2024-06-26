@@ -21,10 +21,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-<<<<<<< HEAD
-      <body className={cn("bg-background min-h-screen font-sans antialiased", 
-      inter.variable)}>{children}</body>
-=======
       <body className={cn("bg-background min-h-screen font-sans antialiased", inter.variable)}>
         <NextSSRPlugin
           routerConfig={extractRouterConfig(ourFileRouter)}
@@ -32,7 +28,6 @@ export default function RootLayout({
         {children}
         <SpeedInsights />
       </body>
->>>>>>> a8969c1e659542321e0c5fb5f39910e544cefe54
     </html>
   );
 }

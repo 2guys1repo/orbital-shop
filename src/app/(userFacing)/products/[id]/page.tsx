@@ -32,11 +32,16 @@ function ProductPageHeader({ product }: { product: ProductType }) {
         <h1 className="text-3xl font-bold">{product.title}</h1>
         <p className="text-gray-500 dark:text-gray-400">{product.description}</p>
         <div className="flex items-center gap-2">
+          <span className="text-2xl">Price per unit: </span>
           <span className="text-4xl font-bold">${product.price}</span>
+        </div>
+        <div>  
+          <span className="text-2xl">Quantity available: </span>
+          <span className="text-4xl font-bold">{product.quantity}</span>
+        </div>
           <Button asChild size="lg">
             <Link href={`/buy/${product.id}`}>Buy Now</Link>
           </Button>
-        </div>
       </div>
     </div>
   )
