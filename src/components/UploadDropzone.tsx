@@ -36,6 +36,7 @@ export default function UploadDropzone() {
   //     window.removeEventListener("beforeunload", handleBeforeUnload);
   //   };
   // }, []);
+  const [imageKey, setImageKey] = useState("");
   const { toast } = useToast()
   const [isDragOver, setIsDragOver] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -49,6 +50,7 @@ export default function UploadDropzone() {
         url: data.url,
         key: data.key,
       })
+      setImageKey(data.key)
     },
     onUploadProgress(p) {
       setUploadProgress(p)
@@ -81,6 +83,7 @@ export default function UploadDropzone() {
       }
     )}
     >
+      <input type="hidden" name="imageKey" value={imageKey} />
       <Dropzone
         onDropAccepted={onDropAccepted}
         onDropRejected={onDropRejected}
