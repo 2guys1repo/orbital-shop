@@ -76,6 +76,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           </div>
           <div>
             <UploadDropzone />
+            {error?.imageKey && <div className="text-destructive">Image is required</div>}
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4" >
