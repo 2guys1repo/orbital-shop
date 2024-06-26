@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 // Uploadthing image upload field
 export default function Utform({ existingPath }: { existingPath?: string }) {
-  const [images, setImages] = useState<ClientUploadedFileData<{ uploadedBy: string }>[]>([]);
+  const [images, setImages] = useState<ClientUploadedFileData<{ imgUrl: string }>[]>([]);
   const [imageKey, setImageKey] = useState("")
   const [prevPath, setPrevPath] = useState("")
   return (

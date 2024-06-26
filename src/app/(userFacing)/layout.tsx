@@ -5,8 +5,8 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>
+  return <div className="container">
     <NavBar />
     <div>{children}</div>
-  </>
+  </div>
 };
