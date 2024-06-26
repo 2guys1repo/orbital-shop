@@ -6,6 +6,7 @@ export type ProductType = {
   imagePath: string;
   sellerId: string;
   createdAt: Date;
+  quantity: number;
 }
 
 export type UserType = {

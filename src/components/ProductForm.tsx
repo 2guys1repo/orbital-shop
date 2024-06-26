@@ -65,19 +65,29 @@ export default function ProductForm({ product }: ProductFormProps) {
             </div>
           </div>
           <div>
+            <Label htmlFor="quantity">Quantity you wish to sell</Label>
+            <div className="mt-1 flex">
+              {product == undefined ?
+                <Input className="block w-full flex-1 rounded-none rounded-r-md" id="quantity" name="quantity" placeholder="1" type="number" required /> :
+                <Input className="block w-full flex-1 rounded-none rounded-r-md" id="quantity" name="quantity" defaultValue={product.quantity} type="number" required />
+              }
+              {error?.quantity && <div className="text-destructive">{error.quantity}</div>}
+            </div>
+          </div>
+          <div>
             <UploadDropzone />
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4" >
           {product && <DeleteProductBtn product_id={product.id} />}
-          <SubmitButton />
+          <SubmitButton product={product}/>
         </CardFooter>
       </Card>
     </form >
   )
 }
 
-function SubmitButton() {
+function SubmitButton({product} : ProductFormProps) {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" disabled={pending}>
