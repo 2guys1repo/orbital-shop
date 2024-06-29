@@ -1,6 +1,7 @@
 import { getAuthenticatedUser } from "@/app/_actions/auth";
 import { getProductById } from "@/app/_actions/product";
 import CheckoutForm from "@/components/CheckoutForm";
+import { Card, CardContent } from "@/components/ui/card";
 import { ProductType } from "@/lib/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -27,40 +28,49 @@ export default async function PurchasePage({ params }: { params: { id: string } 
     }
   })
   if (!paymentIntent.client_secret) throw new Error("An error occured with the payment")
-  return <div className="flex justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div className="w-full max-w-md space-y-8">
+  return (
+    <div className="flex justify-center gap-10 mt-12">
+      {/* Checkout form */}
+      <Card className="flex-1">
+        <CardContent>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 0">
+            Checkout
+          </h2>
+          <p className="mt-2 mb-12 text-center text-sm text-gray-600 0">Complete your purchase</p>
+          <CheckoutForm clientSecret={paymentIntent.client_secret} />
+        </CardContent>
+      </Card>
+      {/* Product info */}
       <ProductDetails product={product} />
-      <CheckoutForm clientSecret={paymentIntent.client_secret} />
     </div>
-  </div>
+  )
 };
 
 function ProductDetails({ product }: { product: ProductType }) {
   return <>
-    <div className="grid md:grid-cols-2 gap-6">
-      <div>
-        <Image
-          alt="Product Image"
-          className="rounded-lg object-cover w-full aspect-square"
-          height={300}
-          src={product.imagePath}
-          width={300}
-        />
-      </div>
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold">{product.title}</h3>
-        <p className="text-gray-500 0">
-          {product.description}
-        </p>
-        <div className="text-3xl font-bold">${product.price}</div>
-      </div>
-    </div>
-    <div>
-      <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 0">
-        Checkout
+    <Card className="w-1/3" >
+      <h2 className="p-4 text-3xl font-semibold">
+        Order Summary
       </h2>
-      <p className="mt-2 text-center text-sm text-gray-600 0">Complete your purchase</p>
-    </div>
-
+      <div className="p-4">
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <Image
+              alt="Product Image"
+              className="rounded-lg object-cover w-full aspect-square"
+              height={300}
+              src={product.imagePath}
+              width={300}
+            />
+          </div>
+          <div className="space-y-4">
+            <h3 className="" >{product.title}</h3>
+            <p className="text-gray-500">
+              ${product.price}.00
+            </p>
+          </div>
+        </div>
+      </div>
+    </Card>
   </>
 }
