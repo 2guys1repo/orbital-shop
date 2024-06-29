@@ -17,13 +17,12 @@ export default async function PurchasePage({ params }: { params: { id: string } 
   const product = await getProductById(productId);
   if (!product) return notFound();
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: product.price,
+    amount: product.price * 100, // TODO must allow float in listing price
     currency: "sgd",
     metadata: {
       buyerId: user.id,
       sellerId: product.sellerId,
-      // middlemanId: "kp_ca26602cdb734963a67d4e5841c11c8a", // TODO all same tag for now
-      middlemanId: "kp_ec7d18db8f964ad480c41ac263d5ec49", // John the middleman
+      middlemanId: "kp_19127ee229284767b48ffa1b49039ad2", // TODO, hardcoded john to be the middleman
       productId: productId,
     }
   })

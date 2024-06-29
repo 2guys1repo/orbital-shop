@@ -27,9 +27,8 @@ export async function createOrder(charge: Stripe.Charge) {
       }
     })
   } catch (error) {
-    console.log("A req was made by a dev, or an error occured while creating an order")
+    console.log(error)
   }
-  // console.log(order)
 }
 
 // Gets all purchases, with necessary fields, of a user 
