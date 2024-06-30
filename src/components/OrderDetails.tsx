@@ -51,7 +51,8 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
             </div>
             <div>
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Order Total</h2>
-              <div className="text-gray-500 dark:text-gray-400 font-medium">${orderDetails.orderTotal}</div>
+              {/* TODO price in cents */}
+              <div className="text-gray-500 dark:text-gray-400 font-medium">${orderDetails.orderTotal / 100}.00</div>
             </div>
           </div>
           <Separator className="my-8" />
@@ -70,7 +71,8 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
                   <TableRow key={orderItem.id}>
                     <TableCell className="font-medium">{orderItem.productName}</TableCell>
                     <TableCell>{orderItem.quantity}</TableCell>
-                    <TableCell className="text-right">${orderItem.priceSold}</TableCell>
+                    {/* TODO price sold is in cents */}
+                    <TableCell className="text-right">${orderItem.priceSold / 100}.00</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

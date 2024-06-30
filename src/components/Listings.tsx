@@ -35,7 +35,8 @@ export default function Listings({ products }: { products: ProductType[] }) {
   const fuse = new Fuse(products, {
     keys: ["title"],
     distance: 50,
-    threshold: 0.5,
+    threshold: 0.4,
+    ignoreLocation: true,
   })
   // handler for the search bar in user profile
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
