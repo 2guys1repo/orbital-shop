@@ -163,6 +163,8 @@ export async function getFilteredProducts(searchParams: SearchParamsType): Promi
   const fuse = new Fuse(products, {
     keys: ["title", "description"],
     distance: 50,
+    threshold: 0.4,
+    ignoreLocation: true,
     shouldSort: sortBy === "best-match" // only sort if order by best match else prisma handles sort
   })
   if (query) {
