@@ -1,5 +1,9 @@
 import { Separator } from "@/components/ui/separator"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { FaArrowLeft } from "react-icons/fa"
 
 type OrderDetail = {
   id: number,
@@ -19,6 +23,7 @@ type OrderItem = {
 }
 
 export default function OrderDetails({ orderDetails }: { orderDetails: OrderDetail }) {
+  const wasFromPurchases = orderDetails.role === 'Seller';
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8">
       <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -77,10 +82,33 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
                 ))}
               </TableBody>
             </Table>
+            
           </div>
+          <Link href={`/${wasFromPurchases ? "purchases" : "sales"}`}>
+            <BackArrowIconWithTooltip wasFromPurchases={wasFromPurchases}/>
+          </Link>
+          
         </div>
       </div>
     </main>
+  )
+}
+
+// Back arrow icon wrapped with tooltip
+function BackArrowIconWithTooltip({wasFromPurchases}: {wasFromPurchases: boolean}) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button size="icon" variant="outline">
+            <FaArrowLeft />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {`Back to your ${wasFromPurchases ? "Orders" : "Sales"}`}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

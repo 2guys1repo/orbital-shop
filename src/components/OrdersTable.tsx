@@ -55,7 +55,12 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
                         <ReceiptIconWithTooltip />
                       </Link>
                       <TrashIconWithTooltip />
-                      <TableCellContainingReportIcon isSeller={isSeller} />
+                      { !isSeller && 
+                        <Link href={`/purchases/${order.id}/report`}>
+                        <ReportIconWithTooltip />
+                        </Link>
+                      }
+                      
                     </div>
                   </TableCell>
                 </TableRow>
@@ -68,13 +73,6 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
   )
 }
 
-function TableCellContainingReportIcon({ isSeller }) {
-  return (
-    <Link href='/'>
-      { isSeller ? null : <ReportIconWithTooltip />}
-    </Link>
-  );
-}
 
 // Report icon wrapped with a tooltip
 function ReportIconWithTooltip() {
