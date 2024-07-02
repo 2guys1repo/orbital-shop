@@ -14,6 +14,14 @@ export type UserType = {
   email: string;
 }
 
+export type ReportType = {
+  reportId: number;
+  productId: number;
+  reason: string;
+  description: string;
+  createdAt: Date;
+}
+
 // Different types of a seller
 export enum SellerType {
   NEW = "NEW",
