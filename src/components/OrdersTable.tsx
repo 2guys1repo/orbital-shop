@@ -75,7 +75,7 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
 
 
 // Report icon wrapped with a tooltip
-function ReportIconWithTooltip() {
+export function ReportIconWithTooltip() {
   return (
     <TooltipProvider>
       <Tooltip>

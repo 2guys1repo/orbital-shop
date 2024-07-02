@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaArrowLeft } from "react-icons/fa"
+import { ReportIconWithTooltip } from "@/components/OrdersTable"
 
 type OrderDetail = {
   id: number,
@@ -33,13 +34,18 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
             <div className="flex items-center space-x-2">
               <PackageIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
               <span className="text-gray-500 dark:text-gray-400 font-medium">Order #{orderDetails.id}</span>
+              { wasFromPurchases &&
+                <Link href={`/purchases/${orderDetails.id}/report`}>
+                  <ReportIconWithTooltip />
+                </Link>
+              }
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">{orderDetails.role}</h2>
               <div className="text-gray-500 dark:text-gray-400">
-                <p>{orderDetails.name}</p>
+                <p>{orderDetails.name}</p> 
                 <p>{orderDetails.email}</p>
               </div>
             </div>
@@ -82,12 +88,10 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
                 ))}
               </TableBody>
             </Table>
-            
           </div>
           <Link href={`/${wasFromPurchases ? "purchases" : "sales"}`}>
             <BackArrowIconWithTooltip wasFromPurchases={wasFromPurchases}/>
           </Link>
-          
         </div>
       </div>
     </main>
