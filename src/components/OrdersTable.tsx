@@ -6,6 +6,7 @@ import StatusBadge from "./StatusBadge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { FaReceipt } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { UserRole } from "@/lib/types"
 import { OrderStatus } from "@prisma/client"
 
@@ -54,6 +55,7 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
                         <ReceiptIconWithTooltip />
                       </Link>
                       <TrashIconWithTooltip />
+                      <TableCellContainingReportIcon isSeller={isSeller} />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -63,6 +65,32 @@ export default async function OrdersTable({ orders, role }: { orders: OrderType[
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function TableCellContainingReportIcon({ isSeller }) {
+  return (
+    <Link href='/'>
+      { isSeller ? null : <ReportIconWithTooltip />}
+    </Link>
+  );
+}
+
+// Report icon wrapped with a tooltip
+function ReportIconWithTooltip() {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button className="text-red-600" size="icon" variant="outline">
+            <FaExclamationTriangle />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p> Report Seller </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

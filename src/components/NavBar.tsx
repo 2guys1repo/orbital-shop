@@ -95,6 +95,9 @@ async function UserProfileDropdown({ name, username }: { name: string, username:
         <DropdownMenuItem asChild>
           <Link href="/sales" className="cursor-pointer">My Sales</Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/reports" className="cursor-pointer">My Reports</Link>
+        </DropdownMenuItem>
         {middleman &&
           <DropdownMenuItem asChild>
             <Link href="/orders" className="cursor-pointer">Manage Orders</Link>
