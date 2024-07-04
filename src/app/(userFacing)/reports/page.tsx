@@ -1,16 +1,13 @@
 import { getAuthenticatedUser } from "@/app/_actions/auth"
-import { getSalesOfUser } from "@/app/_actions/order"
-import OrdersTable from "@/components/OrdersTable"
-import { UserRole } from "@/lib/types";
+import { getReportsOfUser } from "@/app/_actions/report";
+import InfoTable from "@/components/InfoTable";
 
 // displays reports of a user
 export default async function ReportsPage() {
   const user = await getAuthenticatedUser()
   if (!user) throw new Error("Unable to see sales");
-  const orders = await getSalesOfUser(user);
-  // TODO: update OrdersTable component
-  // implement logic to display reports page
+  const reports = await getReportsOfUser(user);
   return <>
-    <OrdersTable orders={orders} role={UserRole.SELLER} />
+    <InfoTable info = {reports} tableType = "reports" />
   </>
 }

@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FaArrowLeft } from "react-icons/fa"
-import { ReportIconWithTooltip } from "@/components/OrdersTable"
+import { ReportIconWithTooltip } from "@/components/InfoTable"
 
 type OrderDetail = {
   id: number,

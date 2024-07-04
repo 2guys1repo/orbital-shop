@@ -1,8 +1,8 @@
 import React from 'react'
 
-const DropdownSelect = ({ options, selectedOption, onOptionChange }) => {
+const DropdownSelect = ({ id, name, options, selectedOption, onOptionChange }) => {
     return (
-        <select value={selectedOption} onChange={onOptionChange}>
+        <select id={id} name={name} value={selectedOption} onChange={onOptionChange}>
             {options.map(option => (
                 <option key={option.label} value={option.value}>
                     {option.value}

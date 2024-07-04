@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import DropdownSelect from "@/components/ui/dropdown-select"
-// import { addReport, updateReport } from "@/app/_actions/report"
+import { addReport, updateReport } from "@/app/_actions/report"
 import { ReportType } from "@/lib/types"
 import { useFormState, useFormStatus } from "react-dom"
 import UploadDropzone from "./UploadDropzone"
@@ -14,15 +14,18 @@ import UploadDropzone from "./UploadDropzone"
 // use later when backend added
 type ReportFormProps = {
     report?: ReportType,
+    orderId: number,
+    userId: number,
 }
 
-export default function ReportForm({ report }: ReportFormProps) {
+export default function ReportForm({ report, orderId, userId }: ReportFormProps) {
   // sets formAction to reportProduct for creating new report or updateReport for editing report
-  // use later when backend added
-  //const formAction = report == undefined ? addReport : updateReport.bind(null, product.id)
-  //const [error, action] = useFormState(formAction, {})
+
+  const formAction = report == undefined ? addReport.bind(null, orderId, userId) : updateReport.bind(null, report.reportId);
+  const [error, action] = useFormState(formAction, {})
   const [selectedOption, setSelectedOption] = useState('');
-  const handleOptionChange = (event) => {
+
+  const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
   const options = [
@@ -33,23 +36,31 @@ export default function ReportForm({ report }: ReportFormProps) {
   ];
 
   return (
-    <form>
+    <form action={action}>
       <Card className="min-w-max w-1/2 mx-auto" >
         <CardHeader>
+        { report == undefined ? // Conditionally renders for adding new report or editing existing one
             <>
-              <CardTitle>Report Order</CardTitle>
-              <CardDescription>Fill out the form to report the order</CardDescription>
+              <CardTitle>Report Details for Order #{orderId}</CardTitle>
+              <CardDescription>Fill out the form to file your report</CardDescription>
+            </> :
+            <>
+              <CardTitle>Edit your report</CardTitle>
+              <CardDescription>Edit the form to modify your report</CardDescription>
             </>
+        }
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="reason">Reason: </Label>
-            <DropdownSelect options={options} selectedOption={selectedOption} onOptionChange={handleOptionChange} />
+            <DropdownSelect id="reason" name="reason" options={options} selectedOption={selectedOption} onOptionChange={handleOptionChange} />
           </div>
           <div>
+          {error?.reason && <div className="text-destructive">{error.reason}</div>}
             <Label htmlFor="description">Description</Label>
             <Textarea className="mt-1" id="description" name="description" placeholder="Elaborate on your report" rows={3} required />
           </div>
+          {error?.description && <div className="text-destructive">{error.description}</div>}
           <div>
             <Label htmlFor="reportImage">Add an image of the issue being reported</Label>
             <UploadDropzone />
