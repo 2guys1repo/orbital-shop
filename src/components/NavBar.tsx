@@ -5,7 +5,7 @@ import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextj
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { getDbUser } from "@/app/_actions/user";
-import { getAuthorizedMiddleman } from "@/app/_actions/auth";
+import { getAuthorizedMiddleman, isAdmin } from "@/app/_actions/auth";
 import { UserRole } from "@prisma/client";
 import SearchBar from "./SearchBar";
 
@@ -75,6 +75,7 @@ export default async function NavBar() {
 // Returns a Dropdown menu
 async function UserProfileDropdown({ name, username }: { name: string, username: string }) {
   const middleman = await getAuthorizedMiddleman();
+  const admin = await isAdmin();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -101,6 +102,11 @@ async function UserProfileDropdown({ name, username }: { name: string, username:
         {middleman &&
           <DropdownMenuItem asChild>
             <Link href="/orders" className="cursor-pointer">Manage Orders</Link>
+          </DropdownMenuItem>
+        }
+        {admin &&
+          <DropdownMenuItem asChild>
+            <Link href="/manage-reports" className="cursor-pointer">Manage Reports</Link>
           </DropdownMenuItem>
         }
       </DropdownMenuContent>

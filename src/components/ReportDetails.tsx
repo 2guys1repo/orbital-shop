@@ -13,6 +13,7 @@ type ReportDetails = {
   imagePath: string,
 }
 
+// TODO: add delete report button
 export default function ReportDetails({ reportDetails }: { reportDetails: ReportDetails }) {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8">

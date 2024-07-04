@@ -83,7 +83,7 @@ model Report {
   id               Int              @id @default(autoincrement())
   orderId          Int
   orderReported    Order            @relation(fields: [orderId], references: [id])
-  userId           Int
+  userId           String
   reason           String
   description      String
   reportDate       DateTime         @default(now())

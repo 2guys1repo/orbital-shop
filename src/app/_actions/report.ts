@@ -16,7 +16,7 @@ const postSchema = z.object({
 });
 
 // Create a new report in database
-export async function addReport(orderId: number, userId: number, _prevState: unknown, formData: FormData) {
+export async function addReport(orderId: number, userId: string, _prevState: unknown, formData: FormData) {
   const kindeUser = await getAuthenticatedUser();
   if (!kindeUser) throw new Error("Server issue, Unable to add product"); // Kinde server issue
   const result = postSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -80,7 +80,6 @@ export async function updateReport(id: number, _prevState: unknown, formData: Fo
 }
 
 export async function updateReportStatus(id: number, nextStatus: ReportStatus) {
-    // TODO: only allow admins to update
     await prisma.report.update({
       where: { id },
       data: {
@@ -112,7 +111,7 @@ export async function getReportsOfUser(user: KindeUser) {
   // TODO: update userId to String
   const rawReports = await prisma.report.findMany({
     where: {
-      userId: 12
+      userId: user.id,
     }
   });
 
@@ -126,4 +125,21 @@ export async function getReportsOfUser(user: KindeUser) {
   })
 
   return transformedReports;
+}
+
+export async function getAllReports() {
+  const rawReports = await prisma.report.findMany();
+
+  const formattedReports = rawReports.map(report => {
+    return {
+      id: report.id,
+      userId: report.userId,
+      orderId: report.orderId,
+      reason: report.reason,
+      reportStatus: report.status,
+      reportDate: report.reportDate.toLocaleDateString(),
+    }
+  });
+
+  return formattedReports;
 }

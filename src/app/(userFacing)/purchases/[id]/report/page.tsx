@@ -11,6 +11,6 @@ export default async function ReportOrder({ params }: { params: { id: string } }
   // TODO: add userId as String
   return <>
     {/* <OrderDetails orderDetails={orderDetails} /> */}
-    <ReportForm orderId = {orderId} userId = {12}/>
+    <ReportForm orderId = {orderId} userId = {user.id}/>
   </>
 }

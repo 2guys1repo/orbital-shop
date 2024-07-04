@@ -15,7 +15,7 @@ import UploadDropzone from "./UploadDropzone"
 type ReportFormProps = {
     report?: ReportType,
     orderId: number,
-    userId: number,
+    userId: string,
 }
 
 export default function ReportForm({ report, orderId, userId }: ReportFormProps) {
