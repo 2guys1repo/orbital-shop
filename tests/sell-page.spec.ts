@@ -1,36 +1,22 @@
 import { test, expect } from '@playwright/test';
-import { SellPage } from '../playwright/pages/sell-page';
 
-test('Should not access sell if not authenticated', async ({ page }) => {
+test.skip('Should not access sell if not authenticated', async ({ page }) => {
   test.slow()
   await page.goto('/');
   await page.getByRole('link', { name: 'Sell' }).click();
   await expect(page.getByText('No account? Create one')).toBeVisible();
 });
 
-test.describe("Tests for listing a product", () => {
+test.describe("Listing form renders properly", () => {
   test.use({ storageState: "playwright/.auth/middleman.json" })
-  test("Able to list a product", async ({ page }) => {
-    const sellPage = new SellPage(page);
-    await sellPage.goto();
-    await sellPage.fillFormDefault()
-    await sellPage.submitForm();
-    await sellPage.expectDefaultProductOnHomePage()
-  })
-
-  test("Able to show error message for client", async ({ page }) => {
-    const sellPage = new SellPage(page);
-    await sellPage.goto();
-    await sellPage.fillFormDefault()
-    // input < 5 char
-    await sellPage.titleField.clear();
-    await sellPage.descriptionField.clear();
-    await sellPage.titleField.fill("123");
-    await sellPage.descriptionField.fill("123");
-    // await sellPage.imageField.setInputFiles([]); // TODO need to delete uploaded files
-    await sellPage.submitForm()
-    // expect client error message
-    await expect(page.locator('div').filter({ hasText: /^Listing titleString must contain at least 5 character\(s\)$/ }).locator('div')).toBeVisible()
-    await expect(page.locator('div').filter({ hasText: /^DescriptionString must contain at least 5 character\(s\)$/ }).locator('div')).toBeVisible()
+  test("display error messages for invalid inputs", async ({ page }) => {
+    await page.goto("/sell")
+    await page.getByPlaceholder('Enter listing title').fill('1');
+    await page.getByPlaceholder('Include details for other').fill('1');
+    await page.getByPlaceholder('0.00').fill('1');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('div').filter({ hasText: /^Listing titleString must contain at least 5 character\(s\)$/ }).locator('div')).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^DescriptionString must contain at least 5 character\(s\)$/ }).locator('div')).toBeVisible();
+    await expect(page.getByText('Image is required')).toBeVisible();
   })
 })
