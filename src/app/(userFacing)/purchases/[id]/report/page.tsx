@@ -5,10 +5,7 @@ export default async function ReportOrder({ params }: { params: { id: string } }
   const user = await getAuthenticatedUser()
   if (!user) throw new Error("Server failed to authenticate user");
    const orderId = parseInt(params.id);
-  // const orderDetails = await getOrderDetailsById(orderId, "Seller")
-  // TODO: add userId as String
   return <>
-    {/* <OrderDetails orderDetails={orderDetails} /> */}
     <ReportForm orderId = {orderId} userId = {user.id}/>
   </>
 }
