@@ -1,6 +1,6 @@
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import { isAdmin } from "@/app/_actions/auth"
+import { getAuthorizedMiddleman, isAdmin } from "@/app/_actions/auth"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DropdownItem } from "@/components/OrdersDropdownMenu"
 import StatusBadge from "@/components/StatusBadge"
@@ -14,7 +14,8 @@ import { getAllReports } from "@/app/_actions/report"
 
 // Admin view of all reports
 export default async function Reports() {
-  const admin = isAdmin();
+  // temporarily allow middleman to access, for public testing purposes
+  const admin = await isAdmin() || getAuthorizedMiddleman();
   if (!admin) redirect("/");
   const reports = await getAllReports();
   return (
