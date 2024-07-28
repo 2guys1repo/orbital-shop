@@ -4,6 +4,7 @@ export type ProductType = {
   description: string;
   price: number; // TODO float??
   imagePath: string;
+  quantity: number;
   sellerId: string;
   createdAt: Date;
 }
