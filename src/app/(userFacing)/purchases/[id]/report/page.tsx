@@ -1,6 +1,4 @@
 import { getAuthenticatedUser } from "@/app/_actions/auth";
-import { getOrderDetailsById } from "@/app/_actions/order";
-import OrderDetails from "@/components/OrderDetails";
 import ReportForm from "@/components/ReportForm";
 
 export default async function ReportOrder({ params }: { params: { id: string } }) {
