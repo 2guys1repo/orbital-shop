@@ -65,7 +65,7 @@ model Product {
   imagePath     String
   sellerId      String
   createdAt DateTime @default(now())
-  quantity      Int
+  // quantity      Int
   orderItems    OrderItem[] // product can belong to many order item, bought multiple times
   sellerDetails SellerDetails @relation(fields: [sellerId], references: [userId])
 }

@@ -38,7 +38,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
       price: data.price,
       imagePath: imagePath,
       sellerId: kindeUser.id,
-      quantity: 1,
+      // quantity: 1,
     }
   })
   revalidatePath("/")

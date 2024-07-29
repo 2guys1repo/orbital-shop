@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.skip('Should not access sell if not authenticated', async ({ page }) => {
+test('Should not access sell if not authenticated', async ({ page }) => {
   test.slow()
   await page.goto('/');
   await page.getByRole('link', { name: 'Sell' }).click();
