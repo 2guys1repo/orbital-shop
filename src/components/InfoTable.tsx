@@ -7,9 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { FaReceipt } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { UserRole } from "@/lib/types"
 import { OrderStatus, ReportStatus } from "@prisma/client"
-import { edgeServerAppPaths } from "next/dist/build/webpack/plugins/pages-manifest-plugin"
 
 type InfoType = {
   id: number,
@@ -75,9 +73,9 @@ export default async function InfoTable({ info, tableType }: { info: InfoType[],
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Link href={`/${tableType}/${e.id}`}>
-                        <ReceiptIconWithTooltip />
+                        <ReceiptIconWithTooltip purchaseOrSalesTable={purchaseOrSalesTable}/>
                       </Link>
-                      <TrashIconWithTooltip />
+                      {purchaseOrSalesTable && <TrashIconWithTooltip />}
                       { tableType === "purchases" && 
                         <Link href={`/purchases/${e.id}/report`}>
                         <ReportIconWithTooltip />
@@ -116,7 +114,7 @@ export function ReportIconWithTooltip() {
 }
 
 // Receipt icon wrapped with a tooltip
-function ReceiptIconWithTooltip() {
+function ReceiptIconWithTooltip( {purchaseOrSalesTable}: { purchaseOrSalesTable: boolean }) {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -126,7 +124,7 @@ function ReceiptIconWithTooltip() {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>View Order Details</p>
+          <p>{purchaseOrSalesTable ? "View Order Details" : "View Report Details"}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
