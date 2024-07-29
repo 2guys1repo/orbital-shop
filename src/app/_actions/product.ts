@@ -38,7 +38,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
       price: data.price,
       imagePath: imagePath,
       sellerId: kindeUser.id,
-      quantity: 1,
+      // quantity: 1,
     }
   })
   revalidatePath("/")
@@ -67,8 +67,10 @@ export async function updateProduct(id: number, _prevState: unknown, formData: F
 
   let imagePath = product.imagePath;
   const utapi = new UTApi();
-  if (data.prevPath && data.imageKey) { // delete prevpath
-    await utapi.deleteFiles(data.prevPath)
+  if (data.imageKey) { // delete prevpath
+    const url = product.imagePath // get the original image path
+    const imgKey = url.substring(url.lastIndexOf("/") + 1);
+    await utapi.deleteFiles(imgKey)
     imagePath = `https://utfs.io/f/${data.imageKey}`  // new image path
   }
   await prisma.product.update({
@@ -82,6 +84,7 @@ export async function updateProduct(id: number, _prevState: unknown, formData: F
   })
   revalidatePath("/")
   revalidatePath("/manage-listing")
+  redirect("/manage-listing")
 }
 
 // Deletes existing product from db
