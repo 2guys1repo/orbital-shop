@@ -4,9 +4,10 @@ import { useTransition } from "react"
 import { DropdownMenuItem } from "./ui/dropdown-menu"
 import { useRouter } from "next/navigation";
 import { updateOrderStatus } from "@/app/_actions/order";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, ReportStatus } from "@prisma/client";
+import { updateReportStatus } from "@/app/_actions/report";
 
-export function DropdownItem({ nextStatus, orderId, children }: { nextStatus: OrderStatus, orderId: number, children: React.ReactNode }) {
+export function DropdownItem({ itemId, children, nextOrderStatus, nextReportStatus }: { itemId: number, children: React.ReactNode, nextOrderStatus?: OrderStatus, nextReportStatus?: ReportStatus }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   return (
@@ -14,7 +15,11 @@ export function DropdownItem({ nextStatus, orderId, children }: { nextStatus: Or
       className="cursor-pointer px-8"
       onClick={() => {
         startTransition(async () => {
-          await updateOrderStatus(orderId, nextStatus)
+          if (nextOrderStatus) {
+            await updateOrderStatus(itemId, nextOrderStatus);
+          } else if (nextReportStatus) {
+            await updateReportStatus(itemId, nextReportStatus);
+          }
           router.refresh()
         })
       }}>
@@ -22,3 +27,4 @@ export function DropdownItem({ nextStatus, orderId, children }: { nextStatus: Or
     </DropdownMenuItem>
   )
 }
+

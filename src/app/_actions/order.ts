@@ -81,7 +81,15 @@ export async function getSalesOfUser(user: KindeUser) {
   return filteredOrders
 }
 
-// Gets the relelevant details for a order
+// Gets order by id
+export async function getOrderById(id: number) {
+  const order = await prisma.order.findUniqueOrThrow({
+    where: { id },
+  })
+  return order;
+}
+
+// Gets the relevant details for a order
 export async function getOrderDetailsById(id: number, role: string) {
   // TODO might need to edit models to improve queries
   const order = await prisma.order.findUniqueOrThrow({

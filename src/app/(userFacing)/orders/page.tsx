@@ -63,16 +63,16 @@ function OrderStatusDropdown({ status, orderId }: { status: OrderStatus, orderId
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild >
-        <StatusBadge status={status} />
+        <StatusBadge orderStatus={status} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownItem nextStatus={OrderStatus.PENDING} orderId={orderId}>
+        <DropdownItem nextOrderStatus={OrderStatus.PENDING} itemId={orderId}>
           Pending
         </DropdownItem>
-        <DropdownItem nextStatus={OrderStatus.SHIPPED} orderId={orderId} >
+        <DropdownItem nextOrderStatus={OrderStatus.SHIPPED} itemId={orderId} >
           Shipped
         </DropdownItem>
-        <DropdownItem nextStatus={OrderStatus.REJECTED} orderId={orderId} >
+        <DropdownItem nextOrderStatus={OrderStatus.REJECTED} itemId={orderId} >
           Rejected
         </DropdownItem>
       </DropdownMenuContent>
@@ -88,13 +88,13 @@ function PencilDropdown({ orderId }: { orderId: number }) {
         <FaPencilAlt size={16} className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownItem nextStatus={OrderStatus.PENDING} orderId={orderId}>
+        <DropdownItem nextOrderStatus={OrderStatus.PENDING} itemId={orderId}>
           Mark Pending
         </DropdownItem>
-        <DropdownItem nextStatus={OrderStatus.SHIPPED} orderId={orderId} >
+        <DropdownItem nextOrderStatus={OrderStatus.SHIPPED} itemId={orderId} >
           Mark Shipped
         </DropdownItem>
-        <DropdownItem nextStatus={OrderStatus.REJECTED} orderId={orderId} >
+        <DropdownItem nextOrderStatus={OrderStatus.REJECTED} itemId={orderId} >
           Mark Rejected
         </DropdownItem>
       </DropdownMenuContent>

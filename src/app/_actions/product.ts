@@ -32,11 +32,13 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
   const imagePath = `https://utfs.io/f/${data.imageKey}`  //path built from Uploadthing service
   await prisma.product.create({
     data: {
+      // TODO: add quantity
       title: data.title,
       description: data.description,
       price: data.price,
       imagePath: imagePath,
       sellerId: kindeUser.id,
+      quantity: 1,
     }
   })
   revalidatePath("/")

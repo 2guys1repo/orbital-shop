@@ -65,6 +65,7 @@ model Product {
   imagePath     String
   sellerId      String
   createdAt DateTime @default(now())
+  quantity      Int
   orderItems    OrderItem[] // product can belong to many order item, bought multiple times
   sellerDetails SellerDetails @relation(fields: [sellerId], references: [userId])
 }
@@ -76,6 +77,24 @@ model MiddlemanDetails {
   ordersProcessed Int     @default(0)
   orders          Order[] // orders to process
   user            User    @relation(fields: [userId], references: [kindeId])
+}
+
+model Report {
+  id               Int              @id @default(autoincrement())
+  orderId          Int
+  orderReported    Order            @relation(fields: [orderId], references: [id])
+  userId           String
+  reason           String
+  description      String
+  reportDate       DateTime         @default(now())
+  status           ReportStatus     @default(PENDING)
+}
+
+// Different states of a report
+enum ReportStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 // Order has one OrderItem atm
@@ -91,6 +110,7 @@ model Order {
   middlemanDetails MiddlemanDetails @relation(fields: [middlemanId], references: [userId])
   buyerDetails     BuyerDetails     @relation(fields: [buyerId], references: [userId])
   sellerDetails    SellerDetails    @relation(fields: [sellerId], references: [userId])
+  reports          Report[]
 }
 
 // Different states of an order

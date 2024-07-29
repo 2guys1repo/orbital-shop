@@ -1,5 +1,10 @@
 import { Separator } from "@/components/ui/separator"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { FaArrowLeft } from "react-icons/fa"
+import { ReportIconWithTooltip } from "@/components/InfoTable"
 
 type OrderDetail = {
   id: number,
@@ -19,6 +24,7 @@ type OrderItem = {
 }
 
 export default function OrderDetails({ orderDetails }: { orderDetails: OrderDetail }) {
+  const wasFromPurchases = orderDetails.role === 'Seller';
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8">
       <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -28,13 +34,18 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
             <div className="flex items-center space-x-2">
               <PackageIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
               <span className="text-gray-500 dark:text-gray-400 font-medium">Order #{orderDetails.id}</span>
+              { wasFromPurchases &&
+                <Link href={`/purchases/${orderDetails.id}/report`}>
+                  <ReportIconWithTooltip />
+                </Link>
+              }
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">{orderDetails.role}</h2>
               <div className="text-gray-500 dark:text-gray-400">
-                <p>{orderDetails.name}</p>
+                <p>{orderDetails.name}</p> 
                 <p>{orderDetails.email}</p>
               </div>
             </div>
@@ -78,9 +89,30 @@ export default function OrderDetails({ orderDetails }: { orderDetails: OrderDeta
               </TableBody>
             </Table>
           </div>
+          <Link href={`/${wasFromPurchases ? "purchases" : "sales"}`}>
+            <BackArrowIconWithTooltip wasFromPurchases={wasFromPurchases}/>
+          </Link>
         </div>
       </div>
     </main>
+  )
+}
+
+// Back arrow icon wrapped with tooltip
+function BackArrowIconWithTooltip({wasFromPurchases}: {wasFromPurchases: boolean}) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button size="icon" variant="outline">
+            <FaArrowLeft />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          {`Back to your ${wasFromPurchases ? "Orders" : "Sales"}`}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

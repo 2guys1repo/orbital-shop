@@ -4,6 +4,7 @@ export type ProductType = {
   description: string;
   price: number; // TODO float??
   imagePath: string;
+  quantity: number;
   sellerId: string;
   createdAt: Date;
 }
@@ -12,6 +13,14 @@ export type UserType = {
   id: number;
   name: string;
   email: string;
+}
+
+export type ReportType = {
+  reportId: number;
+  productId: number;
+  reason: string;
+  description: string;
+  createdAt: Date;
 }
 
 // Different types of a seller
